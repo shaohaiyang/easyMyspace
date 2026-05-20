@@ -112,12 +112,20 @@ install_packages_linux() {
   sudo apt update -qq
 
   local packages=(
-    kitty tmux zsh neovim
-    starship fzf bat eza fd-find ripgrep
-    zoxide delta lazygit yazi btop
-    jq tree wget curl git
+    # X11 核心（全新系统必须）
+    xorg-server xf86-video-fbdev xf86-input-libinput
+    udev dbus
+    # 桌面 & 窗口管理器
     i3wm polybar rofi picom feh
-    xrandr font-noto xinit
+    xrandr xinit font-noto
+    # 终端 & Shell
+    kitty tmux zsh neovim starship
+    # 现代 CLI 工具
+    fzf bat eza fd-find ripgrep zoxide delta
+    lazygit yazi btop
+    # 通用工具
+    jq tree wget curl git
+    # 构建依赖
     libssl-dev zlib1g-dev
   )
 
