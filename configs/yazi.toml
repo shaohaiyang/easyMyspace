@@ -1,0 +1,55 @@
+# ==============================================================================
+# Yazi 增强配置 — Catppuccin Mocha 主题
+# ==============================================================================
+
+[manager]
+ratio = [3, 3, 10]
+show_hidden = true
+show_symlink = true
+sort_by = "alphabetical"
+sort_dir_first = true
+
+[preview]
+max_width = 2000
+max_height = 2400
+cache_dir = "/tmp/yazi-cache"
+
+# 使用 catimg / chafa 做图像预览（如果可用）
+[plugin]
+previewers = [
+  { name = "*.md",  run = "glow" },
+  { name = "*.csv", run = "bat" },
+  { name = "*",     run = "bat" },
+]
+
+[opener]
+# 保留你的 $EDITOR 习惯
+edit = [
+  { run = '$EDITOR "$@"', block = true },
+  { run = 'vim "$@"', block = true },
+]
+open = [
+  { run = 'open "$@"', desktop = "macos" },
+  { run = 'xdg-open "$@"', desktop = "linux" },
+]
+
+[status]
+show_perm = false
+show_owner = false
+
+[filetype]
+rules = [
+  { name = "*.md",  icon = "", fg = "#89b4fa" },
+  { name = "*.rs",  icon = "", fg = "#f9e2af" },
+  { name = "*.py",  icon = "", fg = "#a6e3a1" },
+  { name = "*.go",  icon = "", fg = "#89b4fa" },
+  { name = "*.toml", icon = "", fg = "#f9e2af" },
+  { name = "*.json", icon = "", fg = "#f9e2af" },
+  { name = "*.yaml", icon = "", fg = "#f9e2af" },
+  { name = "*.md",  icon = "", fg = "#cba6f7" },
+  { name = "*/",    icon = "", fg = "#89b4fa" },
+]
+
+[aria]
+# 如果安装了 cava，可以预览音频
+# preview_audio = false

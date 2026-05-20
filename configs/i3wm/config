@@ -1,0 +1,124 @@
+# ==============================================================================
+# i3wm 增强配置 — Catppuccin Mocha 主题
+# 保留你的全屏 + tabbed + Ctrl+Mod1 体系
+# ==============================================================================
+
+# --- 修饰键（保留你的 Ctrl+Mod1） ---
+set $mod Ctrl+Mod1
+
+# --- 字体 ---
+font pango:JetBrains Mono 10, Noto Sans CJK SC 10
+
+# --- 核心逻辑（保留） ---
+for_window [class=".*"] fullscreen enable
+workspace_layout tabbed
+focus_on_window_activation focus
+no_focus [window_role="pop-up"]
+
+# ==============================================================================
+# Catppuccin Mocha 配色
+# ==============================================================================
+# class                   border  backgr. text    indicator child_border
+client.focused          #89b4fa #1e1e2e #cdd6f4 #89b4fa   #313244
+client.focused_inactive #45475a #1e1e2e #a6adc8 #45475a   #313244
+client.unfocused        #313244 #1e1e2e #585b70 #313244   #313244
+client.urgent           #f38ba8 #1e1e2e #cdd6f4 #f38ba8   #313244
+client.placeholder      #313244 #1e1e2e #cdd6f4 #313244   #313244
+client.background       #1e1e2e
+
+# --- 窗口边框 ---
+hide_edge_borders smart
+default_border pixel 1
+default_floating_border normal
+
+# ==============================================================================
+# 快捷键（保留你的全部绑定）
+# ==============================================================================
+
+# --- 启动终端 ---
+bindsym $mod+Return exec alacritty
+
+# --- 关闭窗口 ---
+bindsym $mod+Shift+q kill
+
+# --- 全屏 ---
+bindsym $mod+f fullscreen toggle
+
+# --- 布局切换 ---
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# --- 浏览器 ---
+bindsym $mod+b workspace 1; exec chromium --no-sandbox
+
+# --- 焦点移动（Vim 方向） ---
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# --- 工作区切换 ---
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+
+# --- 窗口移动到工作区 ---
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+
+# --- i3 控制 ---
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'"
+
+# --- 应用快速启动 ---
+bindsym $mod+Return exec alacritty
+bindsym $mod+space exec rofi -show drun
+bindsym $mod+Shift+space exec rofi -show run
+
+# --- 截图 ---
+bindsym Print exec "flameshot gui"
+
+# ==============================================================================
+# Polybar 状态栏
+# ==============================================================================
+bar {
+    position top
+    status_command polybar main
+    tray_output primary
+    font pango:JetBrains Mono 10
+    separator_symbol " | "
+    colors {
+        background #1e1e2e
+        statusline #cdd6f4
+        separator  #45475a
+        focused_workspace  #89b4fa #313244 #89b4fa
+        active_workspace   #45475a #313244 #cdd6f4
+        inactive_workspace #313244 #1e1e2e #585b70
+        urgent_workspace   #f38ba8 #1e1e2e #cdd6f4
+        binding_mode       #f38ba8 #1e1e2e #cdd6f4
+    }
+}
+
+# ==============================================================================
+# 浮动规则
+# ==============================================================================
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
+for_window [class="flameshot"] floating enable
+for_window [class="Rofi"] floating enable
+
+# ==============================================================================
+# 自动启动
+# ==============================================================================
+exec --no-startup-id picom -b
+exec --no-startup-id feh --bg-fill /usr/share/backgrounds/default.png
+exec --no-startup-id setxkbmap us -variant altgr-intl
+exec --no-startup-id xrandr --dpi 96

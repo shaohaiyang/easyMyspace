@@ -1,0 +1,64 @@
+# ==============================================================================
+# Lazygit 配置 — Catppuccin Mocha 主题
+# ==============================================================================
+
+gui:
+  theme:
+    lightTheme: false
+    activeBorderColor:
+      - "#89b4fa"
+      - bold
+    inactiveBorderColor:
+      - "#585b70"
+    optionsTextColor:
+      - "#89b4fa"
+    selectedLineBgColor:
+      - "#313244"
+    selectedRangeBgColor:
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#89b4fa"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+    searchingActiveBorderColor:
+      - "#f9e2af"
+
+  authorColors:
+    "*": "#b4befe"
+
+  nerdFontsVersion: "3"
+  showFileTree: true
+  showListFooter: true
+  showCommandLog: false
+  showBottomLine: true
+
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+  commit:
+    signOff: false
+  merging:
+    args: "--no-ff"
+  pull:
+    mode: rebase
+
+os:
+  editPreset: vim
+  edit: 'zed --wait {{filename}}'
+  editAtLine: 'zed --wait {{filename}}:{{line}}'
+  openDirInEditor: 'zed {{dir}}'
+
+update:
+  method: never
+
+notifications:
+  nerdFontsVersion: "3"
+
+keybinding:
+  universal:
+    togglePanel: "<c-z>"

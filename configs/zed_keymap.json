@@ -1,0 +1,53 @@
+[
+  {
+    "context": "Editor && VimControl && !VimWaiting && !menu",
+    "bindings": {
+      "ctrl-z ctrl-z": "pane::ActivateNextItem",
+      "ctrl-z u": "pane::SplitRight",
+      "ctrl-z v": "pane::SplitDown",
+      "ctrl-z h": "pane::ActivatePrevItem",
+      "ctrl-z l": "pane::ActivateNextItem",
+      "ctrl-z j": "pane::Deactivate",
+      "ctrl-z k": "pane::ActivatePrevItem",
+      "ctrl-z w": "pane::CloseActiveItem",
+      "ctrl-z o": "pane::CloseInactiveItems",
+      "ctrl-z z": "pane::ToggleZoom"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-enter": "assistant::InlineAssist",
+      "cmd-shift-enter": "assistant::OpenDefaultContext",
+      "alt-\\": "editor::ToggleCodeActions",
+      "alt-/": "editor::ToggleComments",
+      "alt-up": "editor::MoveLineUp",
+      "alt-down": "editor::MoveLineDown",
+      "cmd-d": "editor::SelectNext",
+      "cmd-shift-d": "editor::SelectPrevious",
+      "ctrl-w": "editor::SelectLargerSyntaxNode",
+      "ctrl-shift-w": "editor::SelectSmallerSyntaxNode"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-z r": "workspace::ReloadSettings",
+      "ctrl-z /": "workspace::NewSearch",
+      "ctrl-z e": "file_finder::Toggle",
+      "ctrl-z ctrl-f": "project_panel::ToggleFocus",
+      "ctrl-z `": "terminal_panel::ToggleFocus",
+      "ctrl-1": "workspace::ToggleLeftDock",
+      "ctrl-2": "workspace::ToggleRightDock"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-z u": "terminal::SplitRight",
+      "ctrl-z v": "terminal::SplitDown",
+      "ctrl-z w": "terminal::Close",
+      "ctrl-z n": "terminal::New"
+    }
+  }
+]

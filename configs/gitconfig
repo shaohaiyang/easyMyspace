@@ -1,0 +1,109 @@
+[user]
+	name = shao
+	email = shao@users.noreply.github.com
+
+[core]
+	editor = zed --wait
+	pager = delta
+	excludesfile = ~/.gitignore_global
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+	default = current
+
+[pull]
+	rebase = true
+
+[fetch]
+	prune = true
+	all = true
+
+[rebase]
+	autoSquash = true
+	autoStash = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[delta]
+	features = decorations
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = Catppuccin-mocha
+	whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+	commit-decoration-style = blue ol
+	file-style = bold yellow ul
+	file-decoration-style = blue ul
+	hunk-header-decoration-style = blue
+	hunk-header-file-style = red
+	hunk-header-line-number-style = "#585b70"
+	hunk-header-style = file line-number syntax
+
+[interactive]
+	diffFilter = delta --color-only
+
+[alias]
+	# 常用缩写
+	a = add
+	aa = add --all
+	ap = add --patch
+	b = branch
+	ba = branch -a
+	c = commit
+	ca = commit --amend
+	can = commit --amend --no-edit
+	cl = clone
+	co = checkout
+	cp = cherry-pick
+	d = diff
+	ds = diff --staged
+	f = fetch
+	fp = fetch --prune
+	l = log --oneline --graph --decorate -15
+	ll = log --oneline --graph --decorate --all
+	lg = log --stat --graph --oneline --decorate
+	lo = log --oneline -10
+	m = merge
+	mm = merge --no-ff
+	p = push
+	pl = pull
+	po = push origin
+	r = remote -v
+	rb = rebase
+	rbi = rebase --interactive
+	rc = rebase --continue
+	rs = rebase --skip
+	s = status -s
+	ss = status
+	sh = show
+	sw = switch
+	st = stash
+	sta = stash apply
+	stl = stash list
+	stp = stash pop
+	t = tag
+	unstage = reset HEAD --
+	undo = reset --soft HEAD~1
+	w = show --word-diff=color
+
+	# 统计
+	contributors = shortlog --summary --numbered --email
+	graph = log --graph --oneline --all --decorate
+	lines = cloc --by-file --exclude-dir=node_modules,vendor,.git
+
+[url "git@github.com:"]
+	insteadOf = "gh:"
+
+[url "git@gitlab.com:"]
+	insteadOf = "gl:"
+
+[diff]
+	tool = zed
+
+[help]
+	autocorrect = 10
