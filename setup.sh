@@ -9,8 +9,24 @@
 # ==============================================================================
 set -euo pipefail
 
+REPO_URL="https://github.com/shaohaiyang/easyMyspace.git"
+REPO_BRANCH="main"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$SCRIPT_DIR/configs"
+
+# 如果 configs/ 不存在（pipe 模式），自动 clone 到临时目录
+if [ ! -d "$CONFIG_DIR" ]; then
+  TMP_DIR="/tmp/easyMyspace-$$"
+  echo ""
+  echo "  ╔══════════════════════════════════════════╗"
+  echo "  ║   Detected piped execution               ║"
+  echo "  ║   Cloning repo to $TMP_DIR    ║"
+  echo "  ╚══════════════════════════════════════════╝"
+  echo ""
+  git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$TMP_DIR"
+  exec "$TMP_DIR/setup.sh" "$@"
+fi
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
 info()  { printf "${CYAN}[INFO]${NC}  %s\n" "$*"; }
