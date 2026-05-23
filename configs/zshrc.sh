@@ -1,38 +1,42 @@
 # ==============================================================================
-# Zsh 增强片段 — 由 easyMyspace/setup.sh 注入 ~/.zshrc
-# 提供：语法高亮 + 自动建议 + fzf 集成 + zoxide + 别名 + 补全优化
+# Shell 增强片段 — 由 easyMyspace/setup.sh 注入 rc 文件
+# 兼容 zsh 和 bash，zsh 专属功能用条件判断包裹
 # ==============================================================================
 
-# -------------------- 1. 自动建议（基于历史） --------------------
-if [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [ -f "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# -------------------- 1. Zsh 自动建议（基于历史） --------------------
+if [ -n "$ZSH_VERSION" ]; then
+  if [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  elif [ -f "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  fi
 fi
 
-# -------------------- 2. 语法高亮（必须放在最后） --------------------
-if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ -f "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-  source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# -------------------- 2. Zsh 语法高亮（必须放在最后） --------------------
+if [ -n "$ZSH_VERSION" ]; then
+  if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  elif [ -f "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  fi
 fi
 
 # -------------------- 3. fzf 集成 --------------------
 if command -v fzf &>/dev/null; then
-  source <(fzf --zsh) 2>/dev/null || source /opt/homebrew/opt/fzf/shell/completion.zsh 2>/dev/null
+  if [ -n "$ZSH_VERSION" ]; then
+    source <(fzf --zsh) 2>/dev/null || source /opt/homebrew/opt/fzf/shell/completion.zsh 2>/dev/null
+  fi
 
-  # fzf 使用 fd 增强（如果安装了 fd）
   if command -v fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND="fd --hidden --follow --exclude .git"
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND="fd --hidden --type d --exclude .git"
   fi
 
-  # fzf 预览窗口配置
   export FZF_DEFAULT_OPTS="
     --height 60% --layout=reverse --border
     --color 'bg+:#313244,fg+:#cdd6f4,hl:#f38ba8'
@@ -42,23 +46,28 @@ if command -v fzf &>/dev/null; then
     --bind 'ctrl-/:change-preview-window(down|hidden|)'
   "
 
-  # fzf Git 集成
-  fzf-git-branch() {
-    git branch -a --color=always | fzf --height 50% --ansi --preview 'echo {}' | tr -d ' *' | head -n 1 | tr -d '\n' | pbcopy
-    zle reset-prompt
-  }
-  zle -N fzf-git-branch
+  if [ -n "$ZSH_VERSION" ]; then
+    fzf-git-branch() {
+      git branch -a --color=always | fzf --height 50% --ansi --preview 'echo {}' | tr -d ' *' | head -n 1 | tr -d '\n' | pbcopy
+      zle reset-prompt
+    }
+    zle -N fzf-git-branch
 
-  fzf-git-log() {
-    git log --oneline --graph --color=always | fzf --height 50% --ansi --preview 'echo {}' | awk '{print $1}' | tr -d '\n' | pbcopy
-    zle reset-prompt
-  }
-  zle -N fzf-git-log
+    fzf-git-log() {
+      git log --oneline --graph --color=always | fzf --height 50% --ansi --preview 'echo {}' | awk '{print $1}' | tr -d '\n' | pbcopy
+      zle reset-prompt
+    }
+    zle -N fzf-git-log
+  fi
 fi
 
 # -------------------- 4. zoxide（智能目录跳转） --------------------
 if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
+  if [ -n "$ZSH_VERSION" ]; then
+    eval "$(zoxide init zsh)"
+  elif [ -n "$BASH_VERSION" ]; then
+    eval "$(zoxide init bash)"
+  fi
 fi
 
 # -------------------- 5. 现代工具别名 --------------------
@@ -100,24 +109,29 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias ~="cd ~"
 
-# -------------------- 8. 编辑环境变量补全 --------------------
-# Enhanced completion for common tools
-zstyle ':completion:*' menu select
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:options' description 'yes'
-zstyle ':completion:*:descriptions' format '%F{blue}-- %d --%f'
-zstyle ':completion:*:corrections' format '%F{yellow}-- %d --%f'
-zstyle ':completion:*:messages' format '%F{purple}-- %d --%f'
-zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
+# -------------------- 8. Zsh 补全优化 --------------------
+if [ -n "$ZSH_VERSION" ]; then
+  zstyle ':completion:*' menu select
+  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+  zstyle ':completion:*' verbose yes
+  zstyle ':completion:*:options' description 'yes'
+  zstyle ':completion:*:descriptions' format '%F{blue}-- %d --%f'
+  zstyle ':completion:*:corrections' format '%F{yellow}-- %d --%f'
+  zstyle ':completion:*:messages' format '%F{purple}-- %d --%f'
+  zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
+  zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
+  zstyle ':completion:*:cd:*' ignore-parents parent pwd
+  zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+fi
 
-# cd 命令补全时不跟踪 symlink（更快）
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-zstyle ':completion:*:cd:*' ignore-parents parent pwd
+# -------------------- 9. Sway 自动启动（仅 TTY1，无桌面时） --------------------
+if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR:-0}" -eq 1 ]; then
+  exec sway
+fi
 
-# 大小写不敏感补全
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# -------------------- 10. Rust 镜像 & 路径 --------------------
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.opencode/bin:$PATH"
+export CARGO_REGISTRIES_TUNA_INDEX="sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
 
-# -------------------- 9. Go / Rust 等语言路径（如果存在） --------------------
-export PATH="$HOME/.cargo/bin:$PATH"
+# -------------------- 11. Go 路径（如果存在） --------------------
 export PATH="$HOME/go/bin:$PATH"

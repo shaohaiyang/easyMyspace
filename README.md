@@ -47,7 +47,7 @@ cd easyMyspace
 | **Lazygit** | Git TUI 客户端，Catppuccin 主题 |
 | **Git** | 别名集 + delta 彩色 diff |
 | **opencode** | AI 编程助手，多 Provider 配置 |
-| **i3wm** | 平铺窗口管理器（Linux），Polybar + Rofi 主题化 |
+| **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi 主题化 |
 
 ## 主题配色
 

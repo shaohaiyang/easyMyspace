@@ -1,0 +1,54 @@
+# ==============================================================================
+# Mako 通知守护进程配置 — Catppuccin Mocha 主题
+# ==============================================================================
+
+# --- 外观 ---
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+border-size=2
+border-radius=8
+width=360
+height=120
+margin=12
+padding=12
+font=JetBrains Mono 10
+
+# --- 默认超时（毫秒） ---
+default-timeout=5000
+ignore-timeout=0
+
+# --- 分组 ---
+group-by=category
+group-icon=true
+
+# --- 最大通知数 ---
+max-visible=5
+
+# --- 位置 ---
+anchor=top-right
+
+# --- 进度条 ---
+progress-color=#a6e3a1
+
+# --- 标记颜色 ---
+markup=true
+
+# --- 分类颜色 ---
+[urgency=low]
+background-color=#1e1e2e
+text-color=#a6adc8
+border-color=#585b70
+default-timeout=3000
+
+[urgency=normal]
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+default-timeout=5000
+
+[urgency=critical]
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#f38ba8
+default-timeout=8000

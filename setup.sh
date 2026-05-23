@@ -102,9 +102,12 @@ if $DO_CONFIG; then
     "lazygit.yml"
     "gitconfig"
     "opencode.json"
-    "i3wm/config"
-    "i3wm/polybar.ini"
-    "i3wm/rofi.rasi"
+    "sway/config"
+    "sway/start_sway.sh"
+    "sway/waybar/config.jsonc"
+    "sway/waybar/style.css"
+    "sway/wofi/style.css"
+    "sway/mako/config"
   )
   CONFIG_DSTS=(
     "$HOME/.config/kitty/kitty.conf"
@@ -116,9 +119,12 @@ if $DO_CONFIG; then
     "$HOME/.config/lazygit/config.yml"
     "$HOME/.gitconfig"
     "$HOME/.config/opencode/opencode.json"
-    "$HOME/.config/i3/config"
-    "$HOME/.config/polybar/config.ini"
-    "$HOME/.config/rofi/config.rasi"
+    "$HOME/.config/sway/config"
+    "$HOME/.local/bin/start-sway"
+    "$HOME/.config/waybar/config.jsonc"
+    "$HOME/.config/waybar/style.css"
+    "$HOME/.config/wofi/style.css"
+    "$HOME/.config/mako/config"
   )
 
   # Zshrc 注入标记
@@ -156,46 +162,58 @@ if $DO_CONFIG; then
     ok "部署: $src_rel → $dst"
   done
 
-  # --- 注入 .zshrc ---
+  # 启动脚本添加执行权限
+  if ! $DRY_RUN; then
+    start_sway_dst="$HOME/.local/bin/start-sway"
+    if [ -f "$start_sway_dst" ]; then
+      chmod +x "$start_sway_dst"
+      ok "添加执行权限: start-sway"
+    fi
+  fi
+
+  # --- 注入 shell 配置（.zshrc → .bashrc → .profile 逐级回退） ---
   ZSHRC_SRC="$CONFIG_DIR/zshrc.sh"
   ALIAS_SRC="$CONFIG_DIR/aliases.sh"
-  ZSHRC_DST="$HOME/.zshrc"
 
   if $DRY_RUN; then
-    info "[DRY RUN] 将注入 zshrc.sh + aliases.sh → $ZSHRC_DST"
+    info "[DRY RUN] 将注入 zshrc.sh + aliases.sh → shell rc 文件"
   else
-    if [ -f "$ZSHRC_DST" ]; then
-      # 先备份
-      cp "$ZSHRC_DST" "$ZSHRC_DST.bak.$(date +%Y%m%d%H%M%S)"
-
-      # 检查是否已注入，如果是则先移除旧注入
-      if grep -q "$ZSHRC_MARKER_START" "$ZSHRC_DST" 2>/dev/null; then
-        info "检测到旧注入，正在更新..."
-        # 使用 sed 移除旧的注入块
-        if [[ "$(uname -s)" == "Darwin" ]]; then
-          sed -i '' "/$ZSHRC_MARKER_START/,/$ZSHRC_MARKER_END/d" "$ZSHRC_DST"
-        else
-          sed -i "/$ZSHRC_MARKER_START/,/$ZSHRC_MARKER_END/d" "$ZSHRC_DST"
-        fi
-        ok "已移除旧注入块"
-      fi
-
-      # 追加新的注入块
-      {
-        echo ""
-        echo "$ZSHRC_MARKER_START"
-        echo "# 由 easyMyspace/setup.sh 自动生成 — $(date +%Y-%m-%d)"
-        echo ""
-        cat "$ZSHRC_SRC"
-        echo ""
-        cat "$ALIAS_SRC"
-        echo ""
-        echo "$ZSHRC_MARKER_END"
-      } >> "$ZSHRC_DST"
-      ok "已注入 zsh 增强配置 → $ZSHRC_DST"
+    # 确定目标文件
+    if [ -f "$HOME/.zshrc" ]; then
+      RC_DST="$HOME/.zshrc"
+    elif [ -f "$HOME/.bashrc" ]; then
+      RC_DST="$HOME/.bashrc"
     else
-      warn "$ZSHRC_DST 不存在，跳过注入"
+      RC_DST="$HOME/.profile"
     fi
+
+    # 先备份
+    cp "$RC_DST" "$RC_DST.bak.$(date +%Y%m%d%H%M%S)"
+
+    # 检查是否已注入，如果是则先移除旧注入
+    if grep -q "$ZSHRC_MARKER_START" "$RC_DST" 2>/dev/null; then
+      info "检测到旧注入，正在更新..."
+      if [[ "$(uname -s)" == "Darwin" ]]; then
+        sed -i '' "/$ZSHRC_MARKER_START/,/$ZSHRC_MARKER_END/d" "$RC_DST"
+      else
+        sed -i "/$ZSHRC_MARKER_START/,/$ZSHRC_MARKER_END/d" "$RC_DST"
+      fi
+      ok "已移除旧注入块"
+    fi
+
+    # 追加新的注入块
+    {
+      echo ""
+      echo "$ZSHRC_MARKER_START"
+      echo "# 由 easyMyspace/setup.sh 自动生成 — $(date +%Y-%m-%d)"
+      echo ""
+      cat "$ZSHRC_SRC"
+      echo ""
+      cat "$ALIAS_SRC"
+      echo ""
+      echo "$ZSHRC_MARKER_END"
+    } >> "$RC_DST"
+    ok "已注入配置 → $RC_DST"
   fi
 fi
 
@@ -214,14 +232,22 @@ else
   echo ""
   echo "  请执行以下操作使配置生效："
   echo ""
-  echo "  • Shell:  source ~/.zshrc"
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    echo "  • Shell:  source ~/.zshrc"
+  elif [ -f "$HOME/.zshrc" ]; then
+    echo "  • Shell:  source ~/.zshrc"
+  elif [ -f "$HOME/.bashrc" ]; then
+    echo "  • Shell:  source ~/.bashrc"
+  else
+    echo "  • Shell:  source ~/.profile"
+  fi
   echo "  • Kitty:  重新打开 Kitty 终端"
   echo "  • Tmux:   运行 tmux，然后按 Prefix + I 安装插件"
-  echo "  • i3wm:   按 Mod+Shift+R 重新加载（Linux）"
+  echo "  • Sway:   在 TTY 中执行 start-sway 启动（Linux）"
   echo ""
   echo "  Catppuccin Mocha 主题已统一部署至："
   echo "    Kitty · Tmux · Starship · Zed · Yazi"
-  echo "    Lazygit · Git Delta · i3wm · Polybar · Rofi"
+  echo "    Lazygit · Git Delta · Sway · Waybar · Wofi"
   echo ""
   echo "  💡 需要帮助？查看 configs/ 下的说明注释"
 fi

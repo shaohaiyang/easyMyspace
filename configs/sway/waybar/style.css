@@ -1,0 +1,48 @@
+/* ==============================================================================
+ * Waybar 样式 — Catppuccin Mocha 主题
+ * ============================================================================== */
+
+* {
+    font-family: "JetBrains Mono", "Noto Sans CJK SC", sans-serif;
+    font-size: 10px;
+}
+
+window#waybar {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+#workspaces button {
+    padding: 0 4px;
+    background-color: transparent;
+    color: #585b70;
+}
+
+#workspaces button.active {
+    background-color: #313244;
+    color: #89b4fa;
+}
+
+#workspaces button.urgent {
+    background-color: #313244;
+    color: #f38ba8;
+}
+
+#cpu,
+#memory,
+#disk,
+#pulseaudio,
+#network,
+#battery,
+#clock {
+    padding: 0 8px;
+    color: #a6adc8;
+}
+
+#cpu { color: #89b4fa; }
+#memory { color: #cba6f7; }
+#disk { color: #a6adc8; }
+#pulseaudio { color: #a6e3a1; }
+#network { color: #94e2d5; }
+#battery { color: #f9e2af; }
+#clock { color: #f9e2af; }

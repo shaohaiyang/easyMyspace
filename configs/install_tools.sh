@@ -51,7 +51,6 @@ install_packages_macos() {
     zoxide              # cd 增强
     delta               # diff 增强
     lazygit             # Git TUI
-    yazi                # 文件管理器
     btop                # 系统监控
     tealdeer            # man 增强
     jq                  # JSON 处理
@@ -77,6 +76,7 @@ install_packages_macos() {
     fi
   done
 
+  install_yazi_macos
   install_gitu_macos
   install_opencode
 }
@@ -99,39 +99,116 @@ install_opencode() {
     ok "opencode already installed"
     return
   fi
-  info "Installing opencode via npm..."
-  if command -v npm &>/dev/null; then
-    npm install -g @opencod3/cli && ok "opencode installed" || warn "opencode install failed"
+  info "Installing opencode via official install script (prebuilt binary)..."
+  if command -v curl &>/dev/null; then
+    curl -fsSL https://opencode.ai/install | bash \
+      && ok "opencode installed" \
+      || warn "opencode install failed"
   else
-    warn "npm not found, skipping opencode (install Node.js first)"
+    warn "curl not found, skipping opencode"
   fi
 }
 
+install_yazi_from_github() {
+  if command -v yazi &>/dev/null; then
+    ok "yazi already installed"
+    return
+  fi
+
+  if ! command -v curl &>/dev/null; then
+    warn "curl not found, skipping yazi"
+    return 1
+  fi
+
+  local arch triple latest_tag
+  arch="$(uname -m)"
+  case "$arch" in
+    x86_64)  arch="x86_64" ;;
+    aarch64|arm64) arch="aarch64" ;;
+    *)       warn "unsupported arch: $arch, skipping yazi"; return 1 ;;
+  esac
+
+  case "$(uname -s)" in
+    Darwin) triple="${arch}-apple-darwin" ;;
+    Linux)  triple="${arch}-unknown-linux-gnu" ;;
+    *)      warn "unsupported OS, skipping yazi"; return 1 ;;
+  esac
+
+  info "Fetching latest yazi release..."
+  latest_tag="$(curl -fsSL https://api.github.com/repos/sxyazi/yazi/releases/latest \
+    | grep '"tag_name"' | cut -d'"' -f4)" || {
+    warn "failed to fetch yazi latest release"
+    return 1
+  }
+
+  mkdir -p "$HOME/.local/bin"
+
+  info "Downloading yazi ${latest_tag} (${triple})..."
+  local tmp_dir
+  tmp_dir="$(mktemp -d)"
+  curl -fsSL "https://github.com/sxyazi/yazi/releases/download/${latest_tag}/yazi-${triple}.zip" \
+    -o "$tmp_dir/yazi.zip" && \
+  unzip -q "$tmp_dir/yazi.zip" -d "$tmp_dir" && \
+  cp "$tmp_dir/yazi-${triple}/yazi" "$HOME/.local/bin/yazi" && \
+  cp "$tmp_dir/yazi-${triple}/ya" "$HOME/.local/bin/ya" && \
+  chmod +x "$HOME/.local/bin/yazi" "$HOME/.local/bin/ya" && \
+  ok "yazi installed (${latest_tag})" || {
+    warn "yazi install failed"
+    rm -rf "$tmp_dir"
+    return 1
+  }
+  rm -rf "$tmp_dir"
+}
+
+install_yazi_macos() {
+  install_yazi_from_github
+}
+
+install_yazi_linux() {
+  install_yazi_from_github
+}
+
 install_packages_linux() {
+  # 使用清华大学镜像源加速
+  local sources_list="$CONFIG_DIR/sway/sources.list"
+  if [ -f "$sources_list" ]; then
+    sudo cp "$sources_list" /etc/apt/sources.list
+    ok "已切换 apt 源为清华大学镜像"
+  fi
+
   info "Updating apt..."
   sudo apt update -qq
 
   local packages=(
-    # X11 核心（全新系统必须）
-    xorg-server xf86-video-fbdev xf86-input-libinput
+    # Wayland 核心
+    sway swaybg swayidle swaylock
     udev dbus
-    # 桌面 & 窗口管理器
-    i3wm polybar rofi picom feh
-    xrandr xinit font-noto
+    # 桌面 & 状态栏 & 启动器
+    waybar wofi wl-clipboard mako-notifier wlr-randr
+    fonts-noto fonts-noto-cjk
     # 终端 & Shell
     kitty tmux zsh neovim starship
     # 现代 CLI 工具
     fzf bat eza fd-find ripgrep zoxide delta
-    lazygit yazi btop
+    lazygit htop nmon
     # 通用工具
-    jq tree wget curl git
+    jq tree wget curl git vim unzip gpg lsb-release
+    # 基础网络与系统工具
+    openssh-server ncat lldpd ethtool lsscsi smartmontools
+    ifupdown net-tools sysstat python3-pip
+    xfsprogs bind9-dnsutils iproute2 tcpdump sudo
+    iputils-ping iputils-tracepath
     # 构建依赖
     libssl-dev zlib1g-dev
+    # 运行时
+    nodejs npm
   )
 
   sudo apt install -y "${packages[@]}"
 
   install_tpm_plugins
+  install_rust_linux
+  install_yazi_linux
   install_opencode
 }
 
@@ -143,6 +220,46 @@ install_tpm_plugins() {
     info "Installing Tmux Plugin Manager..."
     git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
     ok "TPM installed (run 'prefix + I' inside tmux to install plugins)"
+  fi
+}
+
+install_rust_linux() {
+  # 检查是否已安装 rustup
+  if command -v rustup &>/dev/null; then
+    local current_ver
+    current_ver=$(rustc --version | grep -oP '^\d+\.\d+' || echo "0")
+    if [ "$(echo "$current_ver" | cut -d. -f1)" -ge 2 ] || \
+       { [ "$(echo "$current_ver" | cut -d. -f1)" -eq 1 ] && \
+         [ "$(echo "$current_ver" | cut -d. -f2)" -ge 95 ]; }; then
+      ok "Rust $current_ver already installed (>= 1.95)"
+    else
+      info "Rust $current_ver too old, upgrading to latest stable..."
+      rustup update stable
+    fi
+    return
+  fi
+
+  info "Installing Rust via rustup (>= 1.95)..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+
+  # 加载 cargo 环境
+  [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+  if command -v cargo &>/dev/null; then
+    ok "Rust installed via rustup ($(rustc --version))"
+
+    # 配置 crates.io 清华稀疏镜像
+    mkdir -p "$HOME/.cargo"
+    cat > "$HOME/.cargo/config.toml" <<- 'CARGO_EOF'
+[source.crates-io]
+replace-with = "tuna"
+
+[source.tuna]
+registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
+CARGO_EOF
+    ok "cargo 镜像已切换为清华大学（稀疏索引）"
+  else
+    warn "Rust install failed"
   fi
 }
 
@@ -161,8 +278,15 @@ ensure_fonts() {
   elif [ "$os" = "linux" ]; then
     local fd="$HOME/.local/share/fonts"
     mkdir -p "$fd"
+
+    # 检查是否已安装（全局或用户目录）
     if ls "$fd"/JetBrains* &>/dev/null 2>&1; then
-      ok "JetBrains Mono font found"
+      ok "JetBrains Mono Nerd Font found (user)"
+    elif fc-list | grep -qi "JetBrainsMonoNLNerd" &>/dev/null 2>&1; then
+      ok "JetBrains Mono Nerd Font found (system)"
+    elif ls /usr/share/fonts/JetBrains* &>/dev/null 2>&1 || \
+         ls /usr/local/share/fonts/JetBrains* &>/dev/null 2>&1; then
+      ok "JetBrains Mono Nerd Font found (system)"
     else
       info "Downloading JetBrains Mono Nerd Font..."
       local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
@@ -191,7 +315,8 @@ print_summary() {
   echo "  下一步："
   if [ "$os" = "linux" ]; then
     echo "    tmux: 进入 tmux 后按 prefix + I 安装插件"
-    echo "    i3wm: 重新加载 i3 (Mod+Shift+R)"
+    echo "    sway: 运行 start-sway 启动 Sway 会话 (TTY)"
+    echo "         Mod+Shift+R 重新加载配置"
   fi
   echo "    zsh:  source ~/.zshrc"
   echo "    kitty: 重新打开 Kitty"

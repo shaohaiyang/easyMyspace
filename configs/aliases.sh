@@ -43,6 +43,8 @@ alias localip="ipconfig getifaddr en0 || ip -4 addr show | grep -oP '(?<=inet\s)
 alias myip="curl -s ip.sb"
 
 # --- 目录跳转 ---
-alias -g ...="../.."
-alias -g ....="../../.."
-alias -g .....="../../../.."
+if [ -n "$ZSH_VERSION" ]; then
+  alias -g ...="../.."
+  alias -g ....="../../.."
+  alias -g .....="../../../.."
+fi

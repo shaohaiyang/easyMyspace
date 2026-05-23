@@ -1,0 +1,66 @@
+// =============================================================================
+// Waybar 配置 — Catppuccin Mocha 主题
+// =============================================================================
+{
+    "layer": "top",
+    "position": "top",
+    "height": 28,
+    "spacing": 2,
+    "modules-left": ["sway/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["cpu", "memory", "disk", "pulseaudio", "network", "battery"],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5"
+        }
+    },
+
+    "cpu": {
+        "interval": 2,
+        "format": "{}"
+    },
+
+    "memory": {
+        "interval": 2,
+        "format": "{}"
+    },
+
+    "disk": {
+        "interval": 30,
+        "format": "{free}"
+    },
+
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-icons": {
+            "default": []
+        }
+    },
+
+    "network": {
+        "interval": 3,
+        "format": "{ifname}",
+        "format-disconnected": ""
+    },
+
+    "battery": {
+        "interval": 60,
+        "format": "{capacity}%",
+        "format-charging": "{capacity}%",
+        "format-discharging": "{capacity}%",
+        "format-full": ""
+    },
+
+    "clock": {
+        "interval": 1,
+        "format": "{:%Y-%m-%d %H:%M:%S}"
+    }
+}
