@@ -1,82 +1,83 @@
 # ==============================================================================
-# Starship 提示符 — Catppuccin Mocha 风格极简版
-# 保留你的简洁哲学，加入适度信息（git 状态、时间）
+# Starship 提示符 — Catppuccin Mocha 风格 × 实际功能配置
+# 保留你完整的 Conda/Package/Tmux 环境模块 + time 模块
 # ==============================================================================
 
 add_newline = false
 command_timeout = 10000
 
-# 格式：左提示 → 右提示不显示（保持简洁）
+# 双行布局：第一行环境信息，第二行纯净输入
 format = """
-[](#89b4fa)\
-$directory\
+\n$directory\
 $git_branch\
 $git_status\
 $python\
-$fill\
-$time\
-$character\
+$conda\
+$package\
+\n$character\
 """
 
-right_format = ""
+# ❯ 输入提示符
+[character]
+success_symbol = "[⚡](bold #89b4fa) [❯](bold #a6e3a1) "
+error_symbol = "[💥](bold #f38ba8) [❯](bold #f38ba8) "
 
-# --- 分隔线（简洁蓝色竖线） ---
-[fill]
-style = ""
-
-# --- 目录 ---
+# 📂 目录模块
 [directory]
-style = "bold #89b4fa"
-format = "[$path]($style)"
+format = "[📁 $path ](bold #89b4fa)"
 truncate_to_repo = false
 truncation_length = 3
 truncation_symbol = "…/"
 
-# --- Git 分支 ---
+# 🦚 Conda 环境
+[conda]
+symbol = "🦚 "
+format = '[($symbol$environment) ]($style)'
+style = "bold #a6e3a1"
+ignore_base = true
+
+# 📦 项目版本提示
+[package]
+symbol = "📦 "
+style = "bold #f9e2af"
+format = "[($symbol$version) ]($style)"
+
+# 🌿 Git 分支
 [git_branch]
-format = " [$symbol$branch]($style)"
+symbol = " "
 style = "bold #cba6f7"
-symbol = ""
+format = "[$symbol$branch]($style):"
 truncation_length = 24
 truncation_symbol = "…"
 
-# --- Git 状态（简洁版，只有变化时显示） ---
+# 📊 Git 状态
 [git_status]
-stashed = ""
-deleted = ""
-renamed = ""
-modified = ""
-staged = ""
-untracked = ""
-ahead = "⇡"
-behind = "⇣"
-diverged = "⇕"
+style = "bold #f38ba8"
+format = "[$all_status$ahead$behind]($style)"
 conflicted = "="
-style = "#f9e2af"
+ahead = "↑"
+behind = "↓"
+untracked = "?"
+modified = "!"
+staged = "+"
 
-# --- Python 虚拟环境 ---
+# 🐍 Python 虚拟环境
 [python]
-format = ' [\($virtualenv\)]($style)'
-style = 'bold #a6e3a1'
+symbol = "🐍 "
+format = '[ $symbol$virtualenv ]($style)'
+style = "bold #a6e3a1"
 python_binary = ['python3', 'python']
 detect_extensions = []
 detect_files = []
 detect_folders = []
 detect_env_vars = ['VIRTUAL_ENV', 'CONDA_DEFAULT_ENV', 'PIP_REQUIRE_VIRTUALENV']
 
-# --- 时间 ---
+# 🕐 时间
 [time]
 format = '[$time]($style)'
 style = '#585b70'
 disabled = false
 time_format = '%H:%M'
-
-# --- 提示符字符 ---
-[character]
-success_symbol = "[>](bold #89b4fa)"
-error_symbol = "[>](bold #f38ba8)"
-format = "$symbol "
-vicmd_symbol = "[<](bold #a6e3a1)"
 
 # --- 禁用不用的模块 ---
 [aws]
@@ -86,12 +87,6 @@ disabled = true
 disabled = true
 
 [kubernetes]
-disabled = true
-
-[package]
-disabled = true
-
-[conda]
 disabled = true
 
 [memory_usage]
