@@ -42,6 +42,7 @@ install_packages_macos() {
     tmux                # 终端复用器
     zsh                 # shell
     neovim              # 终端编辑器
+    go                  # Go 语言运行时 (gopls LSP 依赖)
     starship            # 提示符
     fzf                 # 模糊搜索
     bat                 # cat 增强
@@ -193,7 +194,7 @@ install_packages_linux() {
     # 现代 CLI 工具
     fzf bat eza fd-find ripgrep zoxide delta
     lazygit htop nmon
-    luarocks tree-sitter-cli
+    golang-go luarocks tree-sitter-cli
       # 通用工具
     jq tree wget curl git vim unzip gpg lsb-release
     # 基础网络与系统工具
