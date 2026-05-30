@@ -14,12 +14,11 @@ max_width = 2000
 max_height = 2400
 cache_dir = "/tmp/yazi-cache"
 
-# 使用 catimg / chafa 做图像预览（如果可用）
 [plugin]
-previewers = [
-  { name = "*.md",  run = "glow" },
-  { name = "*.csv", run = "bat" },
-  { name = "*",     run = "bat" },
+prepend_previewers = [
+  { name = "*.md",  mime = "text/markdown", run = "glow" },
+  { name = "*.csv", mime = "text/plain",    run = "bat" },
+  { name = "*",     mime = "*",             run = "bat" },
 ]
 
 [opener]
