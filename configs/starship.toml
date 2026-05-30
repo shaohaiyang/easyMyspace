@@ -1,12 +1,10 @@
-# ==============================================================================
-# Starship 提示符 — Catppuccin Mocha 风格 × 实际功能配置
-# 保留你完整的 Conda/Package/Tmux 环境模块 + time 模块
-# ==============================================================================
+# ~/.config/starship.toml
 
+# 禁止首行换行
 add_newline = false
 command_timeout = 10000
 
-# 双行布局：第一行环境信息，第二行纯净输入
+# 【双行流线布局】第一行展示环境状态，第二行纯净输入，不挤占命令空间
 format = """
 \n$directory\
 $git_branch\
@@ -14,45 +12,51 @@ $git_status\
 $python\
 $conda\
 $package\
+$fill\
+$time\
+$memory_usage\
 \n$character\
 """
 
-# ❯ 输入提示符
+# ❯ 输入提示符：平时极简，报错时红色警告
 [character]
-success_symbol = "[⚡](bold #89b4fa) [❯](bold #a6e3a1) "
-error_symbol = "[💥](bold #f38ba8) [❯](bold #f38ba8) "
+success_symbol = "[⚡](bold cyan) [❯](bold green) "
+error_symbol = "[💥](bold red) [❯](bold red) "
 
-# 📂 目录模块
+# 📂 目录模块：清晰、不截断，100% 显示当前完整路径
 [directory]
-format = "[📁 $path ](bold #89b4fa)"
+format = "[📁 $path ](bold blue)"
+# 设为 false 确保在 Git 仓库内也完整显示当前目录
 truncate_to_repo = false
-truncation_length = 3
+# 路径最多展示 3 层（如 ~/Projects/app/src），0 为显示完整绝对路径
+truncation_length = 10
 truncation_symbol = "…/"
 
 # 🦚 Conda 环境
 [conda]
 symbol = "🦚 "
 format = '[($symbol$environment) ]($style)'
-style = "bold #a6e3a1"
+style = "bold green"
 ignore_base = true
 
-# 📦 项目版本提示
+# 📦 项目版本包提示
 [package]
 symbol = "📦 "
-style = "bold #f9e2af"
+style = "bold yellow"
 format = "[($symbol$version) ]($style)"
 
-# 🌿 Git 分支
+# 🌿 Git 分支模块：采用经典英文前缀，绝不乱码
 [git_branch]
-symbol = " "
-style = "bold #cba6f7"
+symbol = " " # 补全了隐藏的 Nerd Font Git 图标
+style = "bold purple"
 format = "[$symbol$branch]($style):"
 truncation_length = 24
 truncation_symbol = "…"
 
-# 📊 Git 状态
+
+# 📊 Git 状态模块：将冲突的中括号改为小括号包裹
 [git_status]
-style = "bold #f38ba8"
+style = "bold purple"
 format = "[$all_status$ahead$behind]($style)"
 conflicted = "="
 ahead = "↑"
@@ -61,36 +65,29 @@ untracked = "?"
 modified = "!"
 staged = "+"
 
-# 🐍 Python 虚拟环境
-[python]
-symbol = "🐍 "
-format = '[ $symbol$virtualenv ]($style)'
-style = "bold #a6e3a1"
-python_binary = ['python3', 'python']
-detect_extensions = []
-detect_files = []
-detect_folders = []
-detect_env_vars = ['VIRTUAL_ENV', 'CONDA_DEFAULT_ENV', 'PIP_REQUIRE_VIRTUALENV']
-
 # 🕐 时间
 [time]
 format = '[$time]($style)'
 style = '#585b70'
 disabled = false
-time_format = '%H:%M'
+time_format = '%Y-%m-%d %H:%M'
 
-# --- 禁用不用的模块 ---
-[aws]
-disabled = true
+# 🐍 Python 环境：使用原生蟒蛇 Emoji，性感且稳定
+[python]
+symbol = "🐍 " # 如果蛇形图标乱码，直接用英文代替
+format = '[ $symbol$virtualenv ]($style)'
+style = "bg:bold green fg:white"
+python_binary = ['python3', 'python']
+detect_extensions = []
+detect_files = []
+detect_folders = []
+detect_env_vars = ['VIRTUAL_ENV']
 
-[gcloud]
-disabled = true
-
-[kubernetes]
-disabled = true
-
+# 🧠 内存状态模块：动态阈值触发
 [memory_usage]
-disabled = true
-
-[battery]
-disabled = true
+symbol = "🧠 "
+disabled = false
+# 只有内存占用超过 85% 时才在终端显示，平时隐形保持简洁
+threshold = 85
+style = "bold red"
+format = " [$symbol$ram]($style)"
