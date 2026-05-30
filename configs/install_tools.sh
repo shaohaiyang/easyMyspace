@@ -34,7 +34,6 @@ install_packages_macos() {
 
   local casks=(
     kitty               # 终端模拟器
-    zed                 # 编辑器
     font-jetbrains-mono # 等宽字体（已使用）
   )
 

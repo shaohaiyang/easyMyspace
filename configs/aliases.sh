@@ -7,10 +7,6 @@
 alias f="yazi"
 alias tree="eza -T --icons=auto"
 
-# --- 编辑器 ---
-alias z="zed ."
-alias code="zed"
-
 # --- Git ---
 alias g="lazygit"
 alias gi="gitu"

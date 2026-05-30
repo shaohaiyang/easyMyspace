@@ -101,7 +101,6 @@ alias g="lazygit"
 alias gi="gitu"
 alias f="yazi"
 alias py="python3"
-alias dev="zed ."
 
 # -------------------- 7. 目录导航快捷方式 --------------------
 alias ..="cd .."
