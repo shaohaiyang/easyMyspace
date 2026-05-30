@@ -53,6 +53,8 @@ install_packages_macos() {
     lazygit             # Git TUI
     btop                # 系统监控
     tealdeer            # man 增强
+    luarocks            # Lua 包管理器 (nvim lazy rocks)
+    tree-sitter         # 解析器生成器 (nvim treesitter)
     jq                  # JSON 处理
     tree                # 目录树
     wget                # 下载
@@ -191,7 +193,8 @@ install_packages_linux() {
     # 现代 CLI 工具
     fzf bat eza fd-find ripgrep zoxide delta
     lazygit htop nmon
-    # 通用工具
+    luarocks tree-sitter
+      # 通用工具
     jq tree wget curl git vim unzip gpg lsb-release
     # 基础网络与系统工具
     openssh-server ncat lldpd ethtool lsscsi smartmontools
