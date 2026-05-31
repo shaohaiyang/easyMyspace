@@ -59,6 +59,8 @@ install_packages_macos() {
     tree                # 目录树
     wget                # 下载
     node                # JavaScript 运行时 (oh-my-pi 依赖)
+    poppler             # PDF 预览 (pdftoppm)
+    sevenzip            # 归档预览 (7zz)
   )
 
   info "Installing casks..."
@@ -213,6 +215,7 @@ install_packages_linux() {
     golang-go luarocks tree-sitter-cli
       # 通用工具
     jq tree wget curl git vim unzip gpg lsb-release
+    poppler-utils p7zip-full
     # 基础网络与系统工具
     openssh-server ncat lldpd ethtool lsscsi smartmontools
     ifupdown net-tools sysstat python3-pip
