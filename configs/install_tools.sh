@@ -59,6 +59,7 @@ install_packages_macos() {
     tree                # 目录树
     wget                # 下载
     node                # JavaScript 运行时 (oh-my-pi 依赖)
+    glow                # Markdown 终端渲染 (yazi 预览)
     poppler             # PDF 预览 (pdftoppm)
     sevenzip            # 归档预览 (7zz)
   )

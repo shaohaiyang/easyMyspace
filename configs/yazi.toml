@@ -16,9 +16,9 @@ cache_dir = "/tmp/yazi-cache"
 
 [plugin]
 prepend_previewers = [
-  { name = "*.md",  mime = "text/markdown", run = "glow" },
-  { name = "*.csv", mime = "text/plain",    run = "bat" },
-  { name = "*",     mime = "*",             run = "bat" },
+  { mime = "text/markdown", run = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"' },
+  { mime = "text/csv",      run = 'piper -- bat --color=always "$1"' },
+  { mime = "text/*",        run = 'piper -- bat --color=always "$1"' },
 ]
 
 [opener]
