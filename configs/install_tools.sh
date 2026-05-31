@@ -58,6 +58,7 @@ install_packages_macos() {
     jq                  # JSON 处理
     tree                # 目录树
     wget                # 下载
+    node                # JavaScript 运行时 (oh-my-pi 依赖)
   )
 
   info "Installing casks..."
@@ -81,6 +82,7 @@ install_packages_macos() {
   install_yazi_macos
   install_gitu_macos
   install_opencode
+  install_omp
 }
 
 install_gitu_macos() {
@@ -108,6 +110,21 @@ install_opencode() {
       || warn "opencode install failed"
   else
     warn "curl not found, skipping opencode"
+  fi
+}
+
+install_omp() {
+  if command -v pi &>/dev/null || command -v omp &>/dev/null; then
+    ok "oh-my-pi already installed"
+    return
+  fi
+  info "Installing oh-my-pi (pi coding agent) via npm..."
+  if command -v npm &>/dev/null; then
+    npm install -g @oh-my-pi/pi-coding-agent \
+      && ok "oh-my-pi installed" \
+      || warn "oh-my-pi install failed"
+  else
+    warn "npm not found, please install Node.js first"
   fi
 }
 
@@ -213,6 +230,7 @@ install_packages_linux() {
   install_rust_linux
   install_yazi_linux
   install_opencode
+  install_omp
 }
 
 install_tpm_plugins() {
@@ -323,5 +341,6 @@ print_summary() {
   fi
   echo "    zsh:  source ~/.zshrc"
   echo "    kitty: 重新打开 Kitty"
+  echo "    omp:  sync-omp-providers 同步 AI provider"
   echo ""
 }

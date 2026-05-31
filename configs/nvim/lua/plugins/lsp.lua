@@ -12,7 +12,7 @@ return {
       ensure_installed = {
         "lua_ls",
         "rust_analyzer",
-        "pyright",
+        "ruff",
         "ts_ls",
         "gopls",
       },
@@ -47,13 +47,13 @@ return {
 
       -- Use nvim 0.12+ API if available
       if vim.lsp.config then
-        local servers = { "lua_ls", "rust_analyzer", "pyright", "ts_ls", "gopls" }
+        local servers = { "lua_ls", "rust_analyzer", "ruff", "ts_ls", "gopls" }
         for _, server in ipairs(servers) do
           vim.lsp.enable(server)
         end
       else
         local lspconfig = require("lspconfig")
-        local servers = { "lua_ls", "rust_analyzer", "pyright", "ts_ls", "gopls" }
+        local servers = { "lua_ls", "rust_analyzer", "ruff", "ts_ls", "gopls" }
         for _, server in ipairs(servers) do
           lspconfig[server].setup({
             capabilities = capabilities,

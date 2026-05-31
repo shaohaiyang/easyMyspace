@@ -100,6 +100,7 @@ if $DO_CONFIG; then
     "lazygit.yml"
     "gitconfig"
     "opencode.json"
+    "sync-omp-providers.sh"
     "sway/config"
     "sway/start_sway.sh"
     "sway/waybar/config.jsonc"
@@ -115,6 +116,7 @@ if $DO_CONFIG; then
     "$HOME/.config/lazygit/config.yml"
     "$HOME/.gitconfig"
     "$HOME/.config/opencode/opencode.json"
+    "$HOME/.local/bin/sync-omp-providers"
     "$HOME/.config/sway/config"
     "$HOME/.local/bin/start-sway"
     "$HOME/.config/waybar/config.jsonc"
@@ -164,6 +166,11 @@ if $DO_CONFIG; then
     if [ -f "$start_sway_dst" ]; then
       chmod +x "$start_sway_dst"
       ok "添加执行权限: start-sway"
+    fi
+    sync_omp_dst="$HOME/.local/bin/sync-omp-providers"
+    if [ -f "$sync_omp_dst" ]; then
+      chmod +x "$sync_omp_dst"
+      ok "添加执行权限: sync-omp-providers"
     fi
   fi
 
@@ -240,6 +247,7 @@ else
   echo "  • Kitty:  重新打开 Kitty 终端"
   echo "  • Tmux:   运行 tmux，然后按 Prefix + I 安装插件"
   echo "  • Sway:   在 TTY 中执行 start-sway 启动（Linux）"
+  echo "  • omp:    运行 sync-omp-providers 同步 AI provider 配置"
   echo ""
   echo "  Catppuccin Mocha 主题已统一部署至："
   echo "    Kitty · Tmux · Starship · Zed · Yazi"
