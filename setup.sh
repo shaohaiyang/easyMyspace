@@ -247,7 +247,7 @@ else
   echo "  • Kitty:  重新打开 Kitty 终端"
   echo "  • Tmux:   运行 tmux，然后按 Prefix + I 安装插件"
   echo "  • Sway:   在 TTY 中执行 start-sway 启动（Linux）"
-  echo "  • omp:    运行 sync-omp-providers 同步 AI provider 配置"
+  echo "  • Oh-my-Pi: 运行 sync-omp-providers 同步 AI provider 配置"
   echo ""
   echo "  Catppuccin Mocha 主题已统一部署至："
   echo "    Kitty · Tmux · Starship · Zed · Yazi"

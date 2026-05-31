@@ -81,7 +81,7 @@ else
 fi
 
 if command -v bat &>/dev/null; then
-  alias cat="bat --theme=Catppuccin-mocha"
+  alias cat="bat --theme='Catppuccin Mocha'"
 fi
 
 if command -v fd &>/dev/null; then

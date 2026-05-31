@@ -32,7 +32,7 @@
 	features = decorations
 	side-by-side = true
 	line-numbers = true
-	syntax-theme = Catppuccin-mocha
+	syntax-theme = "Catppuccin Mocha"
 	whitespace-error-style = 22 reverse
 
 [delta "decorations"]
