@@ -121,6 +121,7 @@ install_rust() {
 install_yazi() {
   if command -v yazi &>/dev/null; then
     ok "yazi already installed"
+    install_yazi_plugins
     return
   fi
   if ! command -v curl &>/dev/null; then
@@ -157,6 +158,23 @@ install_yazi() {
     return 1
   }
   rm -rf "$tmp_dir"
+  install_yazi_plugins
+}
+
+install_yazi_plugins() {
+  export PATH="$HOME/.local/bin:$PATH"
+  if ! command -v ya &>/dev/null; then
+    warn "ya not found, skipping yazi plugins"
+    return
+  fi
+  local plugins=(
+    yazi-rs/plugins:full-border
+    yazi-rs/plugins:smart-enter
+  )
+  for p in "${plugins[@]}"; do
+    info "Installing yazi plugin: $p..."
+    ya pack -a "$p" &>/dev/null && ok "  $p installed" || warn "  $p failed"
+  done
 }
 
 install_tpm() {
