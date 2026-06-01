@@ -149,9 +149,9 @@ install_omp() {
 
   if ! command -v bun &>/dev/null && [ ! -x "$HOME/.bun/bin/bun" ]; then
     info "Installing bun..."
-    curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/main/scripts/install.sh | bash \
+    npm install -g bun &>/dev/null \
       || curl -fsSL https://bun.sh/install | bash \
-      || npm install -g bun
+      || curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/main/scripts/install.sh | bash
   fi
   export PATH="$HOME/.bun/bin:$PATH"
 

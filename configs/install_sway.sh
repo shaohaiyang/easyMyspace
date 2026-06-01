@@ -59,6 +59,8 @@ case "$OS" in
       kitty foot
       fonts-noto fonts-noto-cjk fonts-noto-color-emoji fonts-liberation
       xwayland
+      # locale（neovim 等工具需要 UTF-8）
+      locales
     )
 
     optional_pkgs=(
@@ -165,6 +167,11 @@ else
     && ok "JetBrains Mono Nerd Font 安装完成" \
     || warn "字体安装失败，请手动下载: $url"
 fi
+
+# ==============================================================================
+# locale
+# ==============================================================================
+$SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成"
 
 # ==============================================================================
 # 用户组

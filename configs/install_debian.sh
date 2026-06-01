@@ -54,6 +54,9 @@ install_packages() {
 
   $SUDO apt autoremove -y &>/dev/null && ok "已清理无用依赖包"
 
+  info "生成 locale..."
+  $SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成"
+
   install_uv
   install_rust
   install_yazi
@@ -173,9 +176,9 @@ install_omp() {
 
   if ! command -v bun &>/dev/null && [ ! -x "$HOME/.bun/bin/bun" ]; then
     info "Installing bun..."
-    curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/main/scripts/install.sh | bash \
+    npm install -g bun &>/dev/null \
       || curl -fsSL https://bun.sh/install | bash \
-      || npm install -g bun
+      || curl -fsSL https://raw.githubusercontent.com/oven-sh/bun/main/scripts/install.sh | bash
   fi
   export PATH="$HOME/.bun/bin:$PATH"
 
