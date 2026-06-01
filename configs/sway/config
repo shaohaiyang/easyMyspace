@@ -12,9 +12,9 @@ xwayland enable
 # --- 字体 ---
 font pango:JetBrains Mono 10, Noto Sans CJK SC 10
 
-# --- 核心逻辑（保留） ---
-for_window [class=".*"] fullscreen enable
-for_window [app_id=".*"] fullscreen enable
+# --- 核心逻辑 ---
+# 仅对浏览器等特定应用自动全屏，避免 kitty 内开新窗口成僵尸
+for_window [app_id="chromium"] fullscreen enable
 workspace_layout tabbed
 focus_on_window_activation focus
 no_focus [window_role="pop-up"]
@@ -23,11 +23,11 @@ no_focus [window_role="pop-up"]
 # Catppuccin Mocha 配色
 # ==============================================================================
 # class                   border  backgr. text    indicator child_border
-client.focused          #89b4fa #1e1e2e #cdd6f4 #89b4fa   #313244
-client.focused_inactive #45475a #1e1e2e #a6adc8 #45475a   #313244
-client.unfocused        #313244 #1e1e2e #585b70 #313244   #313244
-client.urgent           #f38ba8 #1e1e2e #cdd6f4 #f38ba8   #313244
-client.placeholder      #313244 #1e1e2e #cdd6f4 #313244   #313244
+client.focused          #89b4fa #1e1e2e #cdd6f4 #89b4fa   #45475a
+client.focused_inactive #585b70 #1e1e2e #cdd6f4 #585b70   #313244
+client.unfocused        #45475a #1e1e2e #a6adc8 #45475a   #313244
+client.urgent           #f38ba8 #1e1e2e #cdd6f4 #f38ba8   #45475a
+client.placeholder      #45475a #1e1e2e #cdd6f4 #45475a   #313244
 client.background       #1e1e2e
 
 # --- 窗口边框 ---

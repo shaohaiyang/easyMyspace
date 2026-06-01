@@ -69,17 +69,10 @@ if $DO_TOOLS; then
   echo "━━━━━━━ Phase 1: 安装核心工具 ━━━━━━━"
   source "$CONFIG_DIR/install_tools.sh"
 
-  OS=$(detect_os)
-  info "检测到系统: $OS"
-
   if $DRY_RUN; then
     info "[DRY RUN] 跳过实际安装"
   else
-    case "$OS" in
-      macos) install_packages_macos ;;
-      linux) install_packages_linux ;;
-      *)     error "不支持的系统: $OS"; exit 1 ;;
-    esac
+    install_packages
     ensure_fonts
   fi
 fi
@@ -124,10 +117,6 @@ if $DO_CONFIG; then
     "$HOME/.config/wofi/style.css"
     "$HOME/.config/mako/config"
   )
-
-  # Zshrc 注入标记
-  ZSHRC_MARKER_START="# >>> easyMyspace injected >>>"
-  ZSHRC_MARKER_END="# <<< easyMyspace injected <<<"
 
   for i in "${!CONFIG_SRCS[@]}"; do
     src_rel="${CONFIG_SRCS[$i]}"
@@ -174,50 +163,35 @@ if $DO_CONFIG; then
     fi
   fi
 
-  # --- 注入 shell 配置（.zshrc → .bashrc → .profile 逐级回退） ---
-  ZSHRC_SRC="$CONFIG_DIR/zshrc.sh"
-  ALIAS_SRC="$CONFIG_DIR/aliases.sh"
+  # --- macOS: 注入 shell 配置（zshrc） ---
+  if [[ "$(uname -s)" == "Darwin" ]] && ! $DRY_RUN; then
+    ZSHRC_SRC="$CONFIG_DIR/zshrc.sh"
+    ALIAS_SRC="$CONFIG_DIR/aliases.sh"
+    MARKER_START="# >>> easyMyspace injected >>>"
+    MARKER_END="# <<< easyMyspace injected <<<"
+    RC_DST="$HOME/.zshrc"
 
-  if $DRY_RUN; then
-    info "[DRY RUN] 将注入 zshrc.sh + aliases.sh → shell rc 文件"
-  else
-    # 确定目标文件
-    if [ -f "$HOME/.zshrc" ]; then
-      RC_DST="$HOME/.zshrc"
-    elif [ -f "$HOME/.bashrc" ]; then
-      RC_DST="$HOME/.bashrc"
-    else
-      RC_DST="$HOME/.profile"
-    fi
+    [ -f "$RC_DST" ] && cp "$RC_DST" "$RC_DST.bak.$(date +%Y%m%d%H%M%S)"
 
-    # 先备份
-    cp "$RC_DST" "$RC_DST.bak.$(date +%Y%m%d%H%M%S)"
-
-    # 检查是否已注入，如果是则先移除旧注入
-    if grep -q "$ZSHRC_MARKER_START" "$RC_DST" 2>/dev/null; then
-      info "检测到旧注入，正在更新..."
-      if [[ "$(uname -s)" == "Darwin" ]]; then
-        sed -i '' "/$ZSHRC_MARKER_START/,/$ZSHRC_MARKER_END/d" "$RC_DST"
-      else
-        sed -i "/$ZSHRC_MARKER_START/,/$ZSHRC_MARKER_END/d" "$RC_DST"
-      fi
+    if grep -q "$MARKER_START" "$RC_DST" 2>/dev/null; then
+      sed -i '' "/$MARKER_START/,/$MARKER_END/d" "$RC_DST"
       ok "已移除旧注入块"
     fi
 
-    # 追加新的注入块
     {
       echo ""
-      echo "$ZSHRC_MARKER_START"
+      echo "$MARKER_START"
       echo "# 由 easyMyspace/setup.sh 自动生成 — $(date +%Y-%m-%d)"
       echo ""
       cat "$ZSHRC_SRC"
       echo ""
       cat "$ALIAS_SRC"
       echo ""
-      echo "$ZSHRC_MARKER_END"
+      echo "$MARKER_END"
     } >> "$RC_DST"
     ok "已注入配置 → $RC_DST"
   fi
+
 fi
 
 # ==============================================================================
@@ -233,16 +207,8 @@ if $DRY_RUN; then
 else
   printf "${GREEN}  ✨ 配置完成！${NC}\n"
   echo ""
-  echo "  请执行以下操作使配置生效："
-  echo ""
   if [[ "$(uname -s)" == "Darwin" ]]; then
     echo "  • Shell:  source ~/.zshrc"
-  elif [ -f "$HOME/.zshrc" ]; then
-    echo "  • Shell:  source ~/.zshrc"
-  elif [ -f "$HOME/.bashrc" ]; then
-    echo "  • Shell:  source ~/.bashrc"
-  else
-    echo "  • Shell:  source ~/.profile"
   fi
   echo "  • Kitty:  重新打开 Kitty 终端"
   echo "  • Tmux:   运行 tmux，然后按 Prefix + I 安装插件"
