@@ -30,7 +30,7 @@ install_packages() {
     kitty tmux neovim starship
     # 现代 CLI 工具
     fzf bat eza fd-find ripgrep zoxide delta
-    lazygit htop nmon
+    lazygit htop nmon btop tealdeer glow
     golang-go luarocks tree-sitter-cli
     # 通用工具
     jq tree wget curl git vim unzip gpg lsb-release
@@ -59,6 +59,7 @@ install_packages() {
 
   install_uv
   install_rust
+  install_gitu
   install_yazi
   install_tpm
   install_opencode
@@ -98,6 +99,17 @@ CARGO_EOF
     ok "cargo 镜像已切换为清华大学（稀疏索引）"
   else
     warn "Rust install failed"
+  fi
+}
+
+install_gitu() {
+  if command -v gitu &>/dev/null; then
+    ok "gitu already installed"
+    return
+  fi
+  if command -v cargo &>/dev/null; then
+    info "Installing gitu via cargo..."
+    cargo install gitu && ok "gitu installed" || warn "gitu install failed"
   fi
 }
 
@@ -150,13 +162,23 @@ install_yazi_plugins() {
     warn "ya not found, skipping yazi plugins"
     return
   fi
+  if ! command -v git &>/dev/null; then
+    warn "git not found, skipping yazi plugins"
+    return
+  fi
+  mkdir -p "$HOME/.config/yazi"
   local plugins=(
     yazi-rs/plugins:full-border
     yazi-rs/plugins:smart-enter
+    yazi-rs/plugins:piper
   )
   for p in "${plugins[@]}"; do
     info "Installing yazi plugin: $p..."
-    ya pack -a "$p" &>/dev/null && ok "  $p installed" || warn "  $p failed"
+    if out=$(ya pkg add "$p" 2>&1); then
+      ok "  $p installed"
+    else
+      warn "  $p failed: $out"
+    fi
   done
 }
 

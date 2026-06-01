@@ -26,7 +26,7 @@ install_packages() {
     kitty tmux neovim
     # 现代 CLI 工具
     fzf bat ripgrep fd-find
-    htop nmon jq tree wget curl git
+    htop nmon jq tree wget curl git btop tealdeer glow
     vim-enhanced unzip gnupg2 redhat-lsb-core
     poppler-utils p7zip p7zip-plugins
     # 基础网络与系统工具
@@ -90,6 +90,14 @@ install_cargo_extras() {
   if ! command -v tree-sitter &>/dev/null; then
     info "Installing tree-sitter via cargo..."
     command -v cargo &>/dev/null && cargo install tree-sitter-cli && ok "tree-sitter installed" || warn "tree-sitter install skipped"
+  fi
+  if ! command -v gitu &>/dev/null; then
+    info "Installing gitu via cargo..."
+    command -v cargo &>/dev/null && cargo install gitu && ok "gitu installed" || warn "gitu install skipped"
+  fi
+  if ! command -v glow &>/dev/null; then
+    info "Installing glow via cargo..."
+    command -v cargo &>/dev/null && cargo install glow && ok "glow installed" || warn "glow install skipped"
   fi
 }
 
@@ -167,13 +175,23 @@ install_yazi_plugins() {
     warn "ya not found, skipping yazi plugins"
     return
   fi
+  if ! command -v git &>/dev/null; then
+    warn "git not found, skipping yazi plugins"
+    return
+  fi
+  mkdir -p "$HOME/.config/yazi"
   local plugins=(
     yazi-rs/plugins:full-border
     yazi-rs/plugins:smart-enter
+    yazi-rs/plugins:piper
   )
   for p in "${plugins[@]}"; do
     info "Installing yazi plugin: $p..."
-    ya pack -a "$p" &>/dev/null && ok "  $p installed" || warn "  $p failed"
+    if out=$(ya pkg add "$p" 2>&1); then
+      ok "  $p installed"
+    else
+      warn "  $p failed: $out"
+    fi
   done
 }
 

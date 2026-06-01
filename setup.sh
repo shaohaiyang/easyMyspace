@@ -163,18 +163,28 @@ if $DO_CONFIG; then
     fi
   fi
 
-  # --- macOS: 注入 shell 配置（zshrc） ---
-  if [[ "$(uname -s)" == "Darwin" ]] && ! $DRY_RUN; then
-    ZSHRC_SRC="$CONFIG_DIR/zshrc.sh"
-    ALIAS_SRC="$CONFIG_DIR/aliases.sh"
+  # --- shell 配置注入 ---
+  if ! $DRY_RUN; then
     MARKER_START="# >>> easyMyspace injected >>>"
     MARKER_END="# <<< easyMyspace injected <<<"
-    RC_DST="$HOME/.zshrc"
+
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      RC_SRC="$CONFIG_DIR/zshrc.sh"
+      ALIAS_SRC="$CONFIG_DIR/aliases.sh"
+      RC_DST="$HOME/.zshrc"
+    else
+      RC_SRC="$CONFIG_DIR/bashrc.sh"
+      RC_DST="$HOME/.bashrc"
+    fi
 
     [ -f "$RC_DST" ] && cp "$RC_DST" "$RC_DST.bak.$(date +%Y%m%d%H%M%S)"
 
     if grep -q "$MARKER_START" "$RC_DST" 2>/dev/null; then
-      sed -i '' "/$MARKER_START/,/$MARKER_END/d" "$RC_DST"
+      if [[ "$(uname -s)" == "Darwin" ]]; then
+        sed -i '' "/$MARKER_START/,/$MARKER_END/d" "$RC_DST"
+      else
+        sed -i "/$MARKER_START/,/$MARKER_END/d" "$RC_DST"
+      fi
       ok "已移除旧注入块"
     fi
 
@@ -183,13 +193,15 @@ if $DO_CONFIG; then
       echo "$MARKER_START"
       echo "# 由 easyMyspace/setup.sh 自动生成 — $(date +%Y-%m-%d)"
       echo ""
-      cat "$ZSHRC_SRC"
-      echo ""
-      cat "$ALIAS_SRC"
+      if [[ "$(uname -s)" == "Darwin" ]]; then
+        cat "$RC_SRC" "$ALIAS_SRC"
+      else
+        cat "$RC_SRC"
+      fi
       echo ""
       echo "$MARKER_END"
     } >> "$RC_DST"
-    ok "已注入配置 → $RC_DST"
+     ok "已注入配置 → $RC_DST"
   fi
 
 fi
@@ -207,8 +219,12 @@ if $DRY_RUN; then
 else
   printf "${GREEN}  ✨ 配置完成！${NC}\n"
   echo ""
+  echo "  请执行以下操作使配置生效："
+  echo ""
   if [[ "$(uname -s)" == "Darwin" ]]; then
     echo "  • Shell:  source ~/.zshrc"
+  else
+    echo "  • Shell:  source ~/.bashrc"
   fi
   echo "  • Kitty:  重新打开 Kitty 终端"
   echo "  • Tmux:   运行 tmux，然后按 Prefix + I 安装插件"
@@ -219,6 +235,6 @@ else
   echo "    Kitty · Tmux · Starship · Zed · Yazi"
   echo "    Lazygit · Git Delta · Sway · Waybar · Wofi"
   echo ""
-  echo "  💡 需要帮助？查看 configs/ 下的说明注释"
+   echo "  💡 需要帮助？查看 configs/ 下的说明注释"
 fi
 echo ""
