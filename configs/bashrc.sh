@@ -39,6 +39,8 @@ fi
 
 if command -v bat &>/dev/null; then
   alias cat="bat --theme='Catppuccin Mocha'"
+elif command -v batcat &>/dev/null; then
+  alias cat="batcat --theme='Catppuccin Mocha'"
 fi
 if command -v fd &>/dev/null; then alias findf="fd"; fi
 if command -v rg &>/dev/null; then alias grep="rg"; fi

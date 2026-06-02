@@ -35,6 +35,9 @@ configs/
 ├── install_debian.sh     ← Debian/Ubuntu/Devuan（apt）
 ├── install_redhat.sh     ← RHEL/CentOS/Alma/Rocky（dnf）
 ├── install_sway.sh       ← Sway 桌面（跨平台，独立运行）
+├── bashrc.sh             ← Bash 配置（Linux 注入 ~/.bashrc）
+├── zshrc.sh              ← Zsh 配置（macOS 注入 ~/.zshrc）
+├── aliases.sh             ← 别名集（配合 shell rc）
 └── sway/                 ← Sway 配置文件
 ```
 
@@ -53,8 +56,8 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 
 | 模块 | 平台 | 说明 |
 |------|------|------|
-| **基础工具** | Debian / RHEL | tmux、neovim、fzf、bat、ripgrep、git、openssh-server 等 |
-| **macOS 工具** | macOS | 同上 via Homebrew + gitu、btop、tealdeer |
+| **基础工具** | Debian / RHEL | tmux、neovim、fzf、bat、ripgrep、git、openssh-server、btop、tealdeer、glow、gitu 等 |
+| **macOS 工具** | macOS | 同上 via Homebrew |
 | **Sway 桌面** | Linux | sway、waybar、wofi、mako、kitty、Thunar、PipeWire 等 |
 | **开发运行时** | 全平台 | Node.js 22.x（NodeSource）、Rust、uv、Go |
 | **AI 工具** | 全平台 | opencode（AI 编程）、oh-my-pi（via bun） |
@@ -66,10 +69,11 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **Kitty** | 终端模拟器，`Ctrl+Z` 前缀键，Catppuccin Mocha 主题 |
 | **Tmux** | 终端复用器，tpm 插件 + resurrect/continuum 会话持久化 |
 | **Starship** | 极简提示符，Catppuccin 配色 |
-| **Neovim** | AI 编辑器，内联补全 + Assistant Panel |
+| **Shell** | macOS 用 zsh+aliases，Linux 用 bash+fzf+zoxide |
 | **Yazi** | 终端文件管理器 |
 | **Lazygit** | Git TUI 客户端 |
-| **Git** | 别名集 + delta 彩色 diff |
+| **Lazygit** | Git TUI 客户端 |
+| **Git** | 别名集（g=gitu gi=gitu）+ delta 彩色 diff |
 | **opencode** | AI 编程助手，多 Provider 配置 |
 | **Oh-my-Pi** | AI 编码 agent（via bun） |
 | **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi 主题化 |

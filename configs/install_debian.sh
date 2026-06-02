@@ -54,6 +54,11 @@ install_packages() {
 
   $SUDO apt autoremove -y &>/dev/null && ok "已清理无用依赖包"
 
+  info "配置 bat 兼容性..."
+  if command -v batcat &>/dev/null && ! command -v bat &>/dev/null; then
+    $SUDO ln -sf "$(command -v batcat)" /usr/local/bin/bat && ok "已创建 bat → batcat 软链接" || warn "创建 bat 软链接失败"
+  fi
+
   info "生成 locale..."
   $SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成"
 
