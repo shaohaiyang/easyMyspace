@@ -3,6 +3,11 @@
 # 兼容 zsh 和 bash，zsh 专属功能用条件判断包裹
 # ==============================================================================
 
+# -------------------- 0. Starship 提示符 --------------------
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
+
 # -------------------- 1. Zsh 自动建议（基于历史） --------------------
 if [ -n "$ZSH_VERSION" ]; then
   if [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then

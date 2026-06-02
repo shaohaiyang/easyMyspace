@@ -2,8 +2,9 @@
 # ==============================================================================
 # install_sway.sh — 跨平台 Sway 桌面环境安装脚本（Debian / RHEL）
 # 用法:
-#   sudo bash install_sway.sh           完整安装
-#   sudo bash install_sway.sh --minimal  仅核心组件
+#   sudo bash install_sway.sh             完整安装
+#   sudo bash install_sway.sh --minimal    仅核心组件
+#   sudo bash install_sway.sh --force      跳过 DE 检测，强制安装
 # ==============================================================================
 set -euo pipefail
 
@@ -15,7 +16,13 @@ ok()    { printf "${GREEN}[OK]${NC}    %s\n" "$*"; }
 warn()  { printf "${YELLOW}[WARN]${NC}  %s\n" "$*"; }
 
 MINIMAL=false
-[[ "${1:-}" == "--minimal" ]] && MINIMAL=true
+FORCE=false
+for arg in "$@"; do
+  case "$arg" in
+    --minimal) MINIMAL=true ;;
+    --force)   FORCE=true ;;
+  esac
+done
 
 # ==============================================================================
 # OS 检测
@@ -42,6 +49,113 @@ if [ "$OS" = "unknown" ]; then
   echo "不支持的系统" >&2
   exit 1
 fi
+
+# ==============================================================================
+# 检测已安装的桌面环境
+# ==============================================================================
+detect_existing_de() {
+  local found=()
+
+  # 1. 正在运行的桌面环境进程
+  local running=(
+    "gnome-shell:GNOME"
+    "plasmashell:KDE Plasma"
+    "xfce4-session:Xfce"
+    "cinnamon-session:Cinnamon"
+    "budgie-wm:Budgie"
+    "mate-session:MATE"
+    "lxqt-session:LXQt"
+    "lxsession:LXDE"
+    "deepin-wm:Deepin"
+    "ukui-session:UKUI"
+  )
+  for entry in "${running[@]}"; do
+    local proc="${entry%%:*}" name="${entry##*:}"
+    if pgrep -x "$proc" &>/dev/null 2>&1; then
+      found+=("$name (正在运行)")
+    fi
+  done
+
+  # 2. XDG_CURRENT_DESKTOP 环境变量
+  if [ -n "${XDG_CURRENT_DESKTOP:-}" ] && [ "$XDG_CURRENT_DESKTOP" != "sway" ]; then
+    found+=("${XDG_CURRENT_DESKTOP} (XDG_CURRENT_DESKTOP)")
+  fi
+
+  # 3. 包管理器检测已安装的 DE
+  if command -v dpkg &>/dev/null; then
+    local deb_pkgs=(
+      "gnome-session:GNOME"
+      "plasma-desktop:KDE Plasma"
+      "xfce4-session:Xfce"
+      "cinnamon-desktop-data:Cinnamon"
+      "budgie-desktop:Budgie"
+      "mate-desktop-environment:MATE"
+      "lxde-core:LXDE"
+      "lxqt-core:LXQt"
+      "dde-desktop:Deepin"
+    )
+    for entry in "${deb_pkgs[@]}"; do
+      local pkg="${entry%%:*}" name="${entry##*:}"
+      if dpkg -l "$pkg" &>/dev/null 2>&1; then
+        found+=("$name (已安装: $pkg)")
+      fi
+    done
+  elif command -v rpm &>/dev/null; then
+    local rpm_pkgs=(
+      "gnome-session:GNOME"
+      "plasma-desktop:KDE Plasma"
+      "xfce4-session:Xfce"
+      "cinnamon-desktop:Cinnamon"
+      "budgie-desktop:Budgie"
+      "mate-desktop:MATE"
+      "lxde-common:LXDE"
+      "lxqt:LXQt"
+      "deepin-desktop:Deepin"
+    )
+    for entry in "${rpm_pkgs[@]}"; do
+      local pkg="${entry%%:*}" name="${entry##*:}"
+      if rpm -q "$pkg" &>/dev/null 2>&1; then
+        found+=("$name (已安装: $pkg)")
+      fi
+    done
+  fi
+
+  # 4. 非 sway 的会话文件
+  for dir in "/usr/share/xsessions" "/usr/share/wayland-sessions"; do
+    [ -d "$dir" ] || continue
+    for f in "$dir"/*.desktop; do
+      [ -f "$f" ] || continue
+      local base
+      base="$(basename "$f" .desktop)"
+      [ "$base" = "sway" ] && continue
+      found+=("${base^} (会话文件: $f)")
+    done
+  done
+
+  if [ ${#found[@]} -gt 0 ]; then
+    printf '%s\n' "${found[@]}" | sort -u
+    return 0
+  fi
+  return 1
+}
+
+info "检测已安装的桌面环境..."
+if ! $FORCE && detected=$(detect_existing_de); then
+  echo ""
+  warn "========================================================"
+  warn "  检测到已有桌面环境，跳过 Sway 安装"
+  warn "========================================================"
+  echo ""
+  while IFS= read -r line; do
+    warn "  - $line"
+  done <<< "$detected"
+  echo ""
+  info "如需强制安装，请使用 --force 参数："
+  info "  sudo bash $0 --force"
+  echo ""
+  exit 0
+fi
+ok "未检测到现有桌面环境，继续安装 Sway"
 
 # ==============================================================================
 # 包管理器 & 包名映射

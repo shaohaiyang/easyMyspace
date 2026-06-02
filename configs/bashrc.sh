@@ -2,6 +2,11 @@
 # Shell 增强片段 — bash 版（由 setup.sh 注入 ~/.bashrc）
 # ==============================================================================
 
+# --- Starship 提示符 ---
+if command -v starship &>/dev/null; then
+  eval "$(starship init bash)"
+fi
+
 # --- PATH ---
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.opencode/bin:$HOME/go/bin:$PATH"
 
