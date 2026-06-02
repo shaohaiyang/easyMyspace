@@ -75,6 +75,7 @@ install_packages() {
 install_yazi() {
   if command -v yazi &>/dev/null; then
     ok "yazi already installed"
+    install_yazi_plugins
     return
   fi
   if ! command -v curl &>/dev/null; then
@@ -111,6 +112,33 @@ install_yazi() {
     return 1
   }
   rm -rf "$tmp_dir"
+  install_yazi_plugins
+}
+
+install_yazi_plugins() {
+  export PATH="$HOME/.local/bin:$PATH"
+  if ! command -v ya &>/dev/null; then
+    warn "ya not found, skipping yazi plugins"
+    return
+  fi
+  if ! command -v git &>/dev/null; then
+    warn "git not found, skipping yazi plugins"
+    return
+  fi
+  mkdir -p "$HOME/.config/yazi"
+  local plugins=(
+    yazi-rs/plugins:full-border
+    yazi-rs/plugins:smart-enter
+    yazi-rs/plugins:piper
+  )
+  for p in "${plugins[@]}"; do
+    info "Installing yazi plugin: $p..."
+    if out=$(ya pkg add "$p" 2>&1); then
+      ok "  $p installed"
+    else
+      warn "  $p failed: $out"
+    fi
+  done
 }
 
 install_gitu() {
