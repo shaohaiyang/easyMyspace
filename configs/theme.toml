@@ -1,33 +1,34 @@
 # ==============================================================================
-# Yazi 主题配置 — Catppuccin Mocha
+# Yazi 主题配置 — Catppuccin Latte（明亮清新）
 # ==============================================================================
 
 [flavor]
-dark = "catppuccin-mocha"
+dark = "catppuccin-latte"
+light = "catppuccin-latte"
 
 [manager]
-cwd = { fg = "#cdd6f4" }
+cwd = { fg = "#4c4f69" }
 
 # Hovered
-hovered = { fg = "#1e1e2e", bg = "#89b4fa" }
+hovered = { fg = "#eff1f5", bg = "#1e66f5" }
 
 # Find
-find_keyword = { fg = "#f9e2af", bold = true }
-find_position = { fg = "#f38ba8", bg = "reset", style = "bold" }
+find_keyword = { fg = "#df8e1d", bold = true }
+find_position = { fg = "#d20f39", bg = "reset", style = "bold" }
 
 # Marker
-marker_selected = { fg = "#a6e3a1", bg = "#a6e3a1" }
-marker_copied = { fg = "#f9e2af", bg = "#f9e2af" }
-marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
+marker_selected = { fg = "#40a02b", bg = "#40a02b" }
+marker_copied = { fg = "#df8e1d", bg = "#df8e1d" }
+marker_cut = { fg = "#d20f39", bg = "#d20f39" }
 
 # Tab
-tab_active = { fg = "#1e1e2e", bg = "#cdd6f4" }
-tab_inactive = { fg = "#a6adc8", bg = "#313244" }
+tab_active = { fg = "#eff1f5", bg = "#4c4f69" }
+tab_inactive = { fg = "#6c6f85", bg = "#e6e9ef" }
 tab_width = 1
 
 # Border
 border_symbol = "│"
-border_style = { fg = "#45475a" }
+border_style = { fg = "#bcc0cc" }
 
 # Highlighting
 syntect_theme = ""
@@ -35,180 +36,180 @@ syntect_theme = ""
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#45475a", bg = "#45475a" }
+separator_style = { fg = "#bcc0cc", bg = "#bcc0cc" }
 
 # Mode
-mode_normal = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
-mode_select = { fg = "#1e1e2e", bg = "#89b4fa", bold = true }
-mode_unset = { fg = "#1e1e2e", bg = "#f38ba8", bold = true }
+mode_normal = { fg = "#eff1f5", bg = "#40a02b", bold = true }
+mode_select = { fg = "#eff1f5", bg = "#1e66f5", bold = true }
+mode_unset = { fg = "#eff1f5", bg = "#d20f39", bold = true }
 
 # Progress
 progress_label = { bold = true }
-progress_normal = { fg = "#a6e3a1", bg = "#45475a" }
-progress_error = { fg = "#f38ba8", bg = "#45475a" }
+progress_normal = { fg = "#40a02b", bg = "#bcc0cc" }
+progress_error = { fg = "#d20f39", bg = "#bcc0cc" }
 
 # Permissions
-permissions_t = { fg = "#a6e3a1" }
-permissions_r = { fg = "#f9e2af" }
-permissions_w = { fg = "#f38ba8" }
-permissions_x = { fg = "#89b4fa" }
-permissions_s = { fg = "#cba6f7" }
+permissions_t = { fg = "#40a02b" }
+permissions_r = { fg = "#df8e1d" }
+permissions_w = { fg = "#d20f39" }
+permissions_x = { fg = "#1e66f5" }
+permissions_s = { fg = "#8839ef" }
 
 [filetype]
 
 rules = [
   # Images
-  { mime = "image/*", fg = "#cba6f7" },
+  { mime = "image/*", fg = "#8839ef" },
   
   # Videos
-  { mime = "video/*", fg = "#f38ba8" },
-  { mime = "audio/*", fg = "#f38ba8" },
+  { mime = "video/*", fg = "#d20f39" },
+  { mime = "audio/*", fg = "#d20f39" },
   
   # Archives
-  { mime = "application/zip", fg = "#f9e2af" },
-  { mime = "application/gzip", fg = "#f9e2af" },
-  { mime = "application/x-tar", fg = "#f9e2af" },
-  { mime = "application/x-bzip2", fg = "#f9e2af" },
-  { mime = "application/x-7z-compressed", fg = "#f9e2af" },
-  { mime = "application/x-rar", fg = "#f9e2af" },
-  { mime = "application/xz", fg = "#f9e2af" },
+  { mime = "application/zip", fg = "#df8e1d" },
+  { mime = "application/gzip", fg = "#df8e1d" },
+  { mime = "application/x-tar", fg = "#df8e1d" },
+  { mime = "application/x-bzip2", fg = "#df8e1d" },
+  { mime = "application/x-7z-compressed", fg = "#df8e1d" },
+  { mime = "application/x-rar", fg = "#df8e1d" },
+  { mime = "application/xz", fg = "#df8e1d" },
   
   # Documents
-  { mime = "application/pdf", fg = "#f38ba8" },
-  { mime = "application/rtf", fg = "#f38ba8" },
-  { mime = "application/msword", fg = "#89b4fa" },
-  { mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fg = "#89b4fa" },
-  { mime = "application/vnd.ms-excel", fg = "#a6e3a1" },
-  { mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fg = "#a6e3a1" },
-  { mime = "application/vnd.ms-powerpoint", fg = "#f9e2af" },
-  { mime = "application/vnd.openxmlformats-officedocument.presentationml.presentation", fg = "#f9e2af" },
+  { mime = "application/pdf", fg = "#d20f39" },
+  { mime = "application/rtf", fg = "#d20f39" },
+  { mime = "application/msword", fg = "#1e66f5" },
+  { mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fg = "#1e66f5" },
+  { mime = "application/vnd.ms-excel", fg = "#40a02b" },
+  { mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fg = "#40a02b" },
+  { mime = "application/vnd.ms-powerpoint", fg = "#df8e1d" },
+  { mime = "application/vnd.openxmlformats-officedocument.presentationml.presentation", fg = "#df8e1d" },
   
   # Lock files
-  { name = "*.lock", fg = "#f38ba8" },
+  { name = "*.lock", fg = "#d20f39" },
   
   # Languages
-  { name = "*.rs", fg = "#f9e2af" },
-  { name = "*.py", fg = "#a6e3a1" },
-  { name = "*.go", fg = "#89b4fa" },
-  { name = "*.js", fg = "#f9e2af" },
-  { name = "*.ts", fg = "#89b4fa" },
-  { name = "*.jsx", fg = "#89b4fa" },
-  { name = "*.tsx", fg = "#cba6f7" },
-  { name = "*.vue", fg = "#a6e3a1" },
-  { name = "*.svelte", fg = "#f38ba8" },
-  { name = "*.java", fg = "#f38ba8" },
-  { name = "*.c", fg = "#89b4fa" },
-  { name = "*.cpp", fg = "#89b4fa" },
-  { name = "*.h", fg = "#89b4fa" },
-  { name = "*.hpp", fg = "#89b4fa" },
-  { name = "*.cs", fg = "#89b4fa" },
-  { name = "*.php", fg = "#f9e2af" },
-  { name = "*.rb", fg = "#f38ba8" },
-  { name = "*.swift", fg = "#f38ba8" },
-  { name = "*.kt", fg = "#cba6f7" },
-  { name = "*.kts", fg = "#cba6f7" },
-  { name = "*.scala", fg = "#f38ba8" },
-  { name = "*.clj", fg = "#a6e3a1" },
-  { name = "*.lua", fg = "#89b4fa" },
-  { name = "*.pl", fg = "#89b4fa" },
-  { name = "*.r", fg = "#a6e3a1" },
-  { name = "*.dart", fg = "#89b4fa" },
-  { name = "*.nim", fg = "#f9e2af" },
-  { name = "*.zig", fg = "#f9e2af" },
-  { name = "*.cr", fg = "#f38ba8" },
-  { name = "*.ex", fg = "#a6e3a1" },
-  { name = "*.exs", fg = "#a6e3a1" },
+  { name = "*.rs", fg = "#df8e1d" },
+  { name = "*.py", fg = "#40a02b" },
+  { name = "*.go", fg = "#1e66f5" },
+  { name = "*.js", fg = "#df8e1d" },
+  { name = "*.ts", fg = "#1e66f5" },
+  { name = "*.jsx", fg = "#1e66f5" },
+  { name = "*.tsx", fg = "#8839ef" },
+  { name = "*.vue", fg = "#40a02b" },
+  { name = "*.svelte", fg = "#d20f39" },
+  { name = "*.java", fg = "#d20f39" },
+  { name = "*.c", fg = "#1e66f5" },
+  { name = "*.cpp", fg = "#1e66f5" },
+  { name = "*.h", fg = "#1e66f5" },
+  { name = "*.hpp", fg = "#1e66f5" },
+  { name = "*.cs", fg = "#1e66f5" },
+  { name = "*.php", fg = "#df8e1d" },
+  { name = "*.rb", fg = "#d20f39" },
+  { name = "*.swift", fg = "#d20f39" },
+  { name = "*.kt", fg = "#8839ef" },
+  { name = "*.kts", fg = "#8839ef" },
+  { name = "*.scala", fg = "#d20f39" },
+  { name = "*.clj", fg = "#40a02b" },
+  { name = "*.lua", fg = "#1e66f5" },
+  { name = "*.pl", fg = "#1e66f5" },
+  { name = "*.r", fg = "#40a02b" },
+  { name = "*.dart", fg = "#1e66f5" },
+  { name = "*.nim", fg = "#df8e1d" },
+  { name = "*.zig", fg = "#df8e1d" },
+  { name = "*.cr", fg = "#d20f39" },
+  { name = "*.ex", fg = "#40a02b" },
+  { name = "*.exs", fg = "#40a02b" },
   
   # Config files
-  { name = "*.toml", fg = "#f9e2af" },
-  { name = "*.yaml", fg = "#f9e2af" },
-  { name = "*.yml", fg = "#f9e2af" },
-  { name = "*.json", fg = "#f9e2af" },
-  { name = "*.xml", fg = "#f9e2af" },
-  { name = "*.ini", fg = "#f9e2af" },
-  { name = "*.cfg", fg = "#f9e2af" },
-  { name = "*.conf", fg = "#f9e2af" },
-  { name = "Makefile", fg = "#f9e2af" },
-  { name = "*.mk", fg = "#f9e2af" },
+  { name = "*.toml", fg = "#df8e1d" },
+  { name = "*.yaml", fg = "#df8e1d" },
+  { name = "*.yml", fg = "#df8e1d" },
+  { name = "*.json", fg = "#df8e1d" },
+  { name = "*.xml", fg = "#df8e1d" },
+  { name = "*.ini", fg = "#df8e1d" },
+  { name = "*.cfg", fg = "#df8e1d" },
+  { name = "*.conf", fg = "#df8e1d" },
+  { name = "Makefile", fg = "#df8e1d" },
+  { name = "*.mk", fg = "#df8e1d" },
   
   # Markdown
-  { name = "*.md", fg = "#cba6f7" },
+  { name = "*.md", fg = "#8839ef" },
   
   # Shell
-  { name = "*.sh", fg = "#a6e3a1" },
-  { name = "*.zsh", fg = "#a6e3a1" },
-  { name = "*.fish", fg = "#a6e3a1" },
-  { name = "*.bash", fg = "#a6e3a1" },
+  { name = "*.sh", fg = "#40a02b" },
+  { name = "*.zsh", fg = "#40a02b" },
+  { name = "*.fish", fg = "#40a02b" },
+  { name = "*.bash", fg = "#40a02b" },
   
   # CSS/HTML
-  { name = "*.css", fg = "#89b4fa" },
-  { name = "*.scss", fg = "#f38ba8" },
-  { name = "*.sass", fg = "#f38ba8" },
-  { name = "*.less", fg = "#89b4fa" },
-  { name = "*.styl", fg = "#89b4fa" },
-  { name = "*.html", fg = "#f38ba8" },
-  { name = "*.htm", fg = "#f38ba8" },
-  { name = "*.ejs", fg = "#f38ba8" },
-  { name = "*.mustache", fg = "#f38ba8" },
-  { name = "*.jinja", fg = "#f38ba8" },
-  { name = "*.pug", fg = "#f38ba8" },
+  { name = "*.css", fg = "#1e66f5" },
+  { name = "*.scss", fg = "#d20f39" },
+  { name = "*.sass", fg = "#d20f39" },
+  { name = "*.less", fg = "#1e66f5" },
+  { name = "*.styl", fg = "#1e66f5" },
+  { name = "*.html", fg = "#d20f39" },
+  { name = "*.htm", fg = "#d20f39" },
+  { name = "*.ejs", fg = "#d20f39" },
+  { name = "*.mustache", fg = "#d20f39" },
+  { name = "*.jinja", fg = "#d20f39" },
+  { name = "*.pug", fg = "#d20f39" },
   
   # SQL
-  { name = "*.sql", fg = "#f9e2af" },
-  { name = "*.db", fg = "#f9e2af" },
-  { name = "*.sqlite", fg = "#f9e2af" },
-  { name = "*.sqlite3", fg = "#f9e2af" },
+  { name = "*.sql", fg = "#df8e1d" },
+  { name = "*.db", fg = "#df8e1d" },
+  { name = "*.sqlite", fg = "#df8e1d" },
+  { name = "*.sqlite3", fg = "#df8e1d" },
   
   # Rust Cargo
-  { name = "Cargo.toml", fg = "#f38ba8" },
-  { name = "Cargo.lock", fg = "#f38ba8" },
+  { name = "Cargo.toml", fg = "#d20f39" },
+  { name = "Cargo.lock", fg = "#d20f39" },
   
   # Go
-  { name = "go.mod", fg = "#89b4fa" },
-  { name = "go.sum", fg = "#89b4fa" },
+  { name = "go.mod", fg = "#1e66f5" },
+  { name = "go.sum", fg = "#1e66f5" },
   
   # Node.js
-  { name = "package.json", fg = "#a6e3a1" },
-  { name = "package-lock.json", fg = "#a6e3a1" },
-  { name = "yarn.lock", fg = "#89b4fa" },
-  { name = "pnpm-lock.yaml", fg = "#f38ba8" },
-  { name = "node_modules", fg = "#a6adc8" },
+  { name = "package.json", fg = "#40a02b" },
+  { name = "package-lock.json", fg = "#40a02b" },
+  { name = "yarn.lock", fg = "#1e66f5" },
+  { name = "pnpm-lock.yaml", fg = "#d20f39" },
+  { name = "node_modules", fg = "#6c6f85" },
   
   # Python
-  { name = "requirements.txt", fg = "#a6e3a1" },
-  { name = "Pipfile", fg = "#a6e3a1" },
-  { name = "poetry.lock", fg = "#a6e3a1" },
-  { name = "pyproject.toml", fg = "#a6e3a1" },
-  { name = "venv", fg = "#a6adc8" },
-  { name = ".venv", fg = "#a6adc8" },
-  { name = "__pycache__", fg = "#a6adc8" },
+  { name = "requirements.txt", fg = "#40a02b" },
+  { name = "Pipfile", fg = "#40a02b" },
+  { name = "poetry.lock", fg = "#40a02b" },
+  { name = "pyproject.toml", fg = "#40a02b" },
+  { name = "venv", fg = "#6c6f85" },
+  { name = ".venv", fg = "#6c6f85" },
+  { name = "__pycache__", fg = "#6c6f85" },
   
   # Git
-  { name = ".git", fg = "#f38ba8" },
-  { name = ".gitignore", fg = "#f38ba8" },
-  { name = ".gitattributes", fg = "#f38ba8" },
-  { name = ".gitmodules", fg = "#f38ba8" },
+  { name = ".git", fg = "#d20f39" },
+  { name = ".gitignore", fg = "#d20f39" },
+  { name = ".gitattributes", fg = "#d20f39" },
+  { name = ".gitmodules", fg = "#d20f39" },
   
   # Docker
-  { name = "Dockerfile", fg = "#89b4fa" },
-  { name = "docker-compose.yml", fg = "#89b4fa" },
-  { name = "docker-compose.yaml", fg = "#89b4fa" },
-  { name = ".dockerignore", fg = "#89b4fa" },
+  { name = "Dockerfile", fg = "#1e66f5" },
+  { name = "docker-compose.yml", fg = "#1e66f5" },
+  { name = "docker-compose.yaml", fg = "#1e66f5" },
+  { name = ".dockerignore", fg = "#1e66f5" },
   
   # K8s
-  { name = "*.yaml", fg = "#89b4fa", regex = true, pattern = "^k8s|kubernetes" },
+  { name = "*.yaml", fg = "#1e66f5", regex = true, pattern = "^k8s|kubernetes" },
   
   # Terraform
-  { name = "*.tf", fg = "#cba6f7" },
-  { name = "*.hcl", fg = "#cba6f7" },
+  { name = "*.tf", fg = "#8839ef" },
+  { name = "*.hcl", fg = "#8839ef" },
   
   # Special directories
-  { name = "node_modules", fg = "#a6adc8" },
-  { name = "target", fg = "#a6adc8" },
-  { name = "dist", fg = "#a6adc8" },
-  { name = "build", fg = "#a6adc8" },
-  { name = ".git", fg = "#f38ba8" },
-  { name = ".github", fg = "#f38ba8" },
-  { name = ".vscode", fg = "#89b4fa" },
-  { name = ".idea", fg = "#89b4fa" },
+  { name = "node_modules", fg = "#6c6f85" },
+  { name = "target", fg = "#6c6f85" },
+  { name = "dist", fg = "#6c6f85" },
+  { name = "build", fg = "#6c6f85" },
+  { name = ".git", fg = "#d20f39" },
+  { name = ".github", fg = "#d20f39" },
+  { name = ".vscode", fg = "#1e66f5" },
+  { name = ".idea", fg = "#1e66f5" },
 ]
