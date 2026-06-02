@@ -2,6 +2,8 @@
 # Yazi 主题配置 — Catppuccin Macchiato（明亮配色，无依赖 flavor）
 # ==============================================================================
 
+[flavor]
+
 [manager]
 cwd = { fg = "#8bd5ca" }
 hovered = { fg = "#24273a", bg = "#8bd5ca" }
