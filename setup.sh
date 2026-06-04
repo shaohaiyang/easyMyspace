@@ -63,6 +63,25 @@ echo "  ╚═══════════════════════
 echo ""
 
 # ==============================================================================
+# 前置检查：sudo 权限
+# ==============================================================================
+if [ "$EUID" -ne 0 ]; then
+  sudo -n true 2>/dev/null || sudo -v
+  if [ $? -ne 0 ]; then
+    error "当前用户没有 sudo 权限，无法执行安装"
+    echo ""
+    echo "  请先以 root 身份将当前用户加入 sudoers："
+    echo "    usermod -aG sudo $USER   # Debian/Ubuntu"
+    echo "    usermod -aG wheel $USER  # RHEL/Fedora"
+    echo ""
+    echo "  或者直接以 root 运行："
+    echo "    sudo ./setup.sh"
+    echo ""
+    exit 1
+  fi
+fi
+
+# ==============================================================================
 # 前置检查：curl
 # ==============================================================================
 if ! command -v curl &>/dev/null; then
