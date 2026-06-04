@@ -257,9 +257,9 @@ ensure_fonts() {
     ok "JetBrains Mono Nerd Font found (system)"
   else
     info "Downloading JetBrains Mono Nerd Font..."
-    local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
-    wget -q "$url" -O /tmp/jetbrains.zip && \
-      unzip -q /tmp/jetbrains.zip -d "$fd" && \
+    local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+    wget -q "$url" -O /tmp/jetbrains.tar.xz && \
+      tar xf /tmp/jetbrains.tar.xz -C "$fd" && \
       fc-cache -fv "$fd" && \
       ok "JetBrains Mono Nerd Font installed" || \
       warn "Font install failed, please install manually: $url"

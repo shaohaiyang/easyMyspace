@@ -29,7 +29,7 @@ install_packages() {
     # 终端 & Shell
     kitty tmux neovim starship
     # 现代 CLI 工具
-    fzf bat eza fd-find ripgrep zoxide delta
+    fzf bat eza fd-find ripgrep zoxide git-delta
     lazygit htop nmon btop tealdeer glow
     golang-go luarocks tree-sitter-cli
     # 通用工具
@@ -250,9 +250,9 @@ ensure_fonts() {
     ok "JetBrains Mono Nerd Font found (system)"
   else
     info "Downloading JetBrains Mono Nerd Font..."
-    local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
-    wget -q "$url" -O /tmp/jetbrains.zip && \
-      unzip -q /tmp/jetbrains.zip -d "$fd" && \
+    local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+    wget -q "$url" -O /tmp/jetbrains.tar.xz && \
+      tar xf /tmp/jetbrains.tar.xz -C "$fd" && \
       fc-cache -fv "$fd" && \
       ok "JetBrains Mono Nerd Font installed" || \
       warn "Font install failed, please install manually: $url"

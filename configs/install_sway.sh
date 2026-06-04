@@ -158,6 +158,19 @@ fi
 ok "未检测到现有桌面环境，继续安装 Sway"
 
 # ==============================================================================
+# 前置检查：curl
+# ==============================================================================
+if ! command -v curl &>/dev/null; then
+  warn "curl 未找到，无法继续安装"
+  echo ""
+  echo "  请先安装 curl："
+  echo "    Debian:  sudo apt install curl"
+  echo "    RHEL:    sudo dnf install curl"
+  echo ""
+  exit 1
+fi
+
+# ==============================================================================
 # 包管理器 & 包名映射
 # ==============================================================================
 case "$OS" in
@@ -274,9 +287,9 @@ elif fc-list | grep -qi "JetBrainsMonoNLNerd" &>/dev/null 2>&1; then
   ok "JetBrains Mono Nerd Font 已存在（系统级）"
 else
   info "下载 JetBrains Mono Nerd Font..."
-  url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
-  wget -q "$url" -O /tmp/jetbrains.zip \
-    && unzip -q /tmp/jetbrains.zip -d "$fd" \
+  url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+  wget -q "$url" -O /tmp/jetbrains.tar.xz \
+    && tar xf /tmp/jetbrains.tar.xz -C "$fd" \
     && fc-cache -fv "$fd" \
     && ok "JetBrains Mono Nerd Font 安装完成" \
     || warn "字体安装失败，请手动下载: $url"
