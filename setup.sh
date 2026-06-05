@@ -21,7 +21,7 @@ if [ ! -d "$CONFIG_DIR" ]; then
   echo ""
   echo "  ╔══════════════════════════════════════════╗"
   echo "  ║   Detected piped execution               ║"
-  echo "  ║   Cloning repo to $TMP_DIR    ║"
+  echo "  ║   Cloning repo to $TMP_DIR               ║"
   echo "  ╚══════════════════════════════════════════╝"
   echo ""
   git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$TMP_DIR"
@@ -57,8 +57,8 @@ done
 # --- Header ---
 echo ""
 echo "  ╔══════════════════════════════════════════╗"
-echo "  ║      easyMyspace — Setup & Config       ║"
-echo "  ║     Catppuccin Mocha · Ctrl+Z Prefix    ║"
+echo "  ║      easyMyspace — Setup & Config        ║"
+echo "  ║     Catppuccin Mocha · Ctrl+Z Prefix     ║"
 echo "  ╚══════════════════════════════════════════╝"
 echo ""
 
