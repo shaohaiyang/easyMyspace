@@ -14,7 +14,6 @@ vim.opt.autoindent = true
 
 -- encoding
 vim.opt.fileencodings = "utf-8"
-vim.opt.termencoding = "utf-8"
 vim.opt.encoding = "utf-8"
 
 vim.opt.wrap = false

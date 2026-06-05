@@ -175,6 +175,11 @@ install_omp() {
     return
   fi
 
+  local npm_path="/usr/local/bin/npm"
+  if [ -x "$npm_path" ]; then
+    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+  fi
+
   if ! command -v bun &>/dev/null && [ ! -x "$HOME/.bun/bin/bun" ]; then
     info "Installing bun..."
     npm install -g bun &>/dev/null \
