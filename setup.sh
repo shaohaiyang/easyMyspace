@@ -184,7 +184,33 @@ if $DO_CONFIG; then
     ok "部署: $src_rel → $dst"
   done
 
-  # 启动脚本添加执行权限
+  # --- 部署 Kitty 插件 ---
+  KITTY_PLUGIN_SRC="$CONFIG_DIR/kitty_plugins"
+  KITTY_PLUGIN_DST="$HOME/.config/kitty/kitty_plugins"
+  if [ -d "$KITTY_PLUGIN_SRC" ]; then
+    if $DRY_RUN; then
+      info "[DRY RUN] 将部署插件: $KITTY_PLUGIN_SRC → $KITTY_PLUGIN_DST"
+    else
+      mkdir -p "$KITTY_PLUGIN_DST"
+      cp -r "$KITTY_PLUGIN_SRC"/* "$KITTY_PLUGIN_DST"/
+      ok "部署: kitty_plugins → $KITTY_PLUGIN_DST"
+    fi
+  fi
+
+  # --- 部署 Kitty kittens ---
+  KITTY_KITTEN_SRC="$CONFIG_DIR/kittens"
+  KITTY_KITTEN_DST="$HOME/.config/kitty/kittens"
+  if [ -d "$KITTY_KITTEN_SRC" ]; then
+    if $DRY_RUN; then
+      info "[DRY RUN] 将部署 kittens: $KITTY_KITTEN_SRC → $KITTY_KITTEN_DST"
+    else
+      mkdir -p "$KITTY_KITTEN_DST"
+      cp -r "$KITTY_KITTEN_SRC"/* "$KITTY_KITTEN_DST"/
+      chmod +x "$KITTY_KITTEN_DST"/*.py 2>/dev/null || true
+      ok "部署: kittens → $KITTY_KITTEN_DST"
+    fi
+  fi
+
   if ! $DRY_RUN; then
     start_sway_dst="$HOME/.local/bin/start-sway"
     if [ -f "$start_sway_dst" ]; then

@@ -15,6 +15,7 @@ $package\
 $fill\
 $time\
 $memory_usage\
+$kitty_zoom\
 \n$character\
 """
 
@@ -91,3 +92,9 @@ disabled = false
 threshold = 85
 style = "bold red"
 format = " [$symbol$ram]($style)"
+
+# 🔍 Kitty Zoom 状态标识 — 读取 kitty pipe kitten 写的状态文件
+[custom.kitty_zoom]
+command = "test \"$(head -n 1 ~/.cache/kitty_zoom_status 2>/dev/null)\" = 1 && echo ZOOM || true"
+style = "bold yellow"
+format = " [$output ]($style)"
