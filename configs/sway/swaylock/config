@@ -1,0 +1,44 @@
+# Swaylock config — Catppuccin Mocha theme
+font=JetBrains Mono
+font-size=16
+
+# Base background
+color=1e1e2e
+
+# Ring
+ring-color=45475a
+ring-ver-color=89b4fa
+ring-wrong-color=f38ba8
+ring-clear-color=a6e3a1
+
+# Key highlight
+key-hl-color=89b4fa
+
+# Line (between ring and inside)
+line-color=1e1e2e
+line-ver-color=89b4fa
+line-wrong-color=f38ba8
+line-clear-color=a6e3a1
+
+# Separator
+separator-color=585b70
+
+# Inside
+inside-color=1e1e2e
+inside-ver-color=89b4fa
+inside-wrong-color=f38ba8
+inside-clear-color=a6e3a1
+
+# Text
+text-color=cdd6f4
+text-ver-color=1e1e2e
+text-wrong-color=1e1e2e
+text-clear-color=1e1e2e
+
+# Misc
+indicator-radius=100
+indicator-thickness=10
+bs-hl-color=f38ba8
+caps-lock-key-hl-color=f5c2e7
+caps-lock-bs-hl-color=f5c2e7
+disable-caps-lock-text

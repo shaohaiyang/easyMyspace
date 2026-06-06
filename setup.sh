@@ -174,6 +174,7 @@ if $DO_CONFIG; then
     "sway/waybar/style.css"
     "sway/wofi/style.css"
     "sway/mako/config"
+    "sway/swaylock/config"
   )
   CONFIG_DSTS=(
     "$HOME/.config/kitty/kitty.conf"
@@ -191,6 +192,7 @@ if $DO_CONFIG; then
     "$HOME/.config/waybar/style.css"
     "$HOME/.config/wofi/style.css"
     "$HOME/.config/mako/config"
+    "$HOME/.config/swaylock/config"
   )
 
   for i in "${!CONFIG_SRCS[@]}"; do

@@ -78,6 +78,7 @@ bindsym $mod+Shift+5 move container to workspace 5
 
 # --- Sway 控制 ---
 bindsym $mod+Shift+r restart
+bindsym $mod+Shift+l exec swaylock
 bindsym $mod+Shift+e exec "swaynag -t warning -m 'Exit Sway?' -B 'Yes' 'swaymsg exit'"
 
 # --- 应用快速启动 ---
@@ -86,6 +87,12 @@ bindsym $mod+Shift+space exec wofi --show run
 
 # --- 输入法配置 ---
 bindsym $mod+grave exec fcitx5-config-qt
+
+# --- 截图（grim + slurp） ---
+bindsym Print exec grim - | wl-copy
+bindsym Shift+Print exec grim -g "$(slurp)" - | wl-copy
+bindsym Ctrl+Print exec mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
+bindsym Ctrl+Shift+Print exec mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png
 
 # ==============================================================================
 # 输入配置（取代 setxkbmap）
@@ -114,6 +121,11 @@ for_window [app_id="fcitx5-config-qt"] floating enable, invisible 1
 # ==============================================================================
 # 自动启动
 # ==============================================================================
+exec swayidle -w \
+  timeout 300 'swaylock -f' \
+  timeout 600 'swaymsg "output * dpms off"' \
+  resume 'swaymsg "output * dpms on"' \
+  before-sleep 'swaylock -f'
 exec swaybg -c '#1e1e2e'
 exec mako
 exec waybar

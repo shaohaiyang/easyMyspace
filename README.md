@@ -58,7 +58,7 @@ configs/
 ├── bashrc.sh             ← Bash 配置（Linux 注入 ~/.bashrc）
 ├── zshrc.sh              ← Zsh 配置（macOS 注入 ~/.zshrc）
 ├── aliases.sh             ← 别名集（配合 shell rc）
-└── sway/                 ← Sway 配置文件
+└── sway/                 ← Sway 配置文件（含 swaylock 锁屏主题）
 ```
 
 子脚本可独立运行，安装指定平台的工具：
@@ -92,11 +92,10 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **Shell** | macOS 用 zsh+aliases，Linux 用 bash+fzf+zoxide |
 | **Yazi** | 终端文件管理器 |
 | **Lazygit** | Git TUI 客户端 |
-| **Lazygit** | Git TUI 客户端 |
 | **Git** | 别名集（g=gitu gi=gitu）+ delta 彩色 diff |
 | **opencode** | AI 编程助手，多 Provider 配置 |
 | **Oh-my-Pi** | AI 编码 agent（via bun） |
-| **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi 主题化 |
+| **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi + Mako 主题化，swaylock 锁屏 + swayidle 自动息屏，截图快捷键 |
 
 ## 主题配色
 
@@ -130,3 +129,22 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **缩放** | `z` 全屏 · `Ctrl+z` 恢复 |
 | **复制模式** | `[` 进入 · 空格 选择 · `y` 复制 |
 | **插件管理** | `Ctrl+Z` + `I`（安装）
+
+### Sway 键位
+
+| 功能 | 快捷键 |
+|------|--------|
+| **启动终端** | `Super+Enter` |
+| **应用启动器** | `Super+Space`（drun）· `Super+Shift+Space`（run） |
+| **工作区** | `Super+1~5` 切换 · `Super+Shift+1~5` 移动窗口 |
+| **窗口焦点** | `Super+h/j/k/l` Vim 风格 |
+| **全屏** | `Super+f` |
+| **锁屏** | `Super+Shift+L` 手动锁屏 |
+| **截全屏 → 剪贴板** | `Print` |
+| **选区截图 → 剪贴板** | `Shift+Print` |
+| **截全屏 → 文件** | `Ctrl+Print` |
+| **选区截图 → 文件** | `Ctrl+Shift+Print` |
+| **自动锁屏** | 闲置 5 分钟自动锁屏 |
+| **自动息屏** | 闲置 10 分钟关闭显示器，活动后恢复 |
+
+截图保存至 `~/Pictures/Screenshots/` 目录，配合 `Mod+Shift+R` 重启 Sway 使配置生效。
