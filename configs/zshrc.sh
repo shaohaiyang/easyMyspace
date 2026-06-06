@@ -77,7 +77,29 @@ fi
 
 # -------------------- 5. 现代工具别名 --------------------
 if command -v eza &>/dev/null; then
-  alias ls="eza --icons=auto --group-directories-first"
+  _ls() {
+    local args=() has_t=false has_r=false
+    for arg in "$@"; do
+      if [[ "$arg" == -* && "$arg" != --* ]]; then
+        [[ "$arg" == *t* ]] && has_t=true
+        [[ "$arg" == *r* ]] && has_r=true
+        local cleaned="${arg//[rt]/}"
+        [[ -n "$cleaned" && "$cleaned" != "-" ]] && args+=("$cleaned")
+      else
+        args+=("$arg")
+      fi
+    done
+    if $has_t && $has_r; then
+      eza --icons=auto --group-directories-first --sort oldest "${args[@]}"
+    elif $has_t; then
+      eza --icons=auto --group-directories-first --sort modified "${args[@]}"
+    elif $has_r; then
+      eza --icons=auto --group-directories-first --reverse "${args[@]}"
+    else
+      eza --icons=auto --group-directories-first "${args[@]}"
+    fi
+  }
+  alias ls=_ls
   alias ll="eza -la --icons=auto --group-directories-first --time-style=long-iso"
   alias lt="eza -la --icons=auto --tree --level=2"
 else
