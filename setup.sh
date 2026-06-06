@@ -172,6 +172,7 @@ if $DO_CONFIG; then
     "sway/start_sway.sh"
     "sway/waybar/config.jsonc"
     "sway/waybar/style.css"
+    "sway/waybar/scripts/fcitx5-status.sh"
     "sway/wofi/style.css"
     "sway/mako/config"
     "sway/swaylock/config"
@@ -190,6 +191,7 @@ if $DO_CONFIG; then
     "$HOME/.local/bin/start-sway"
     "$HOME/.config/waybar/config.jsonc"
     "$HOME/.config/waybar/style.css"
+    "$HOME/.config/waybar/scripts/fcitx5-status.sh"
     "$HOME/.config/wofi/style.css"
     "$HOME/.config/mako/config"
     "$HOME/.config/swaylock/config"
@@ -250,6 +252,11 @@ if $DO_CONFIG; then
     if [ -f "$sync_omp_dst" ]; then
       chmod +x "$sync_omp_dst"
       ok "添加执行权限: sync-omp-providers"
+    fi
+    fcitx5_dst="$HOME/.config/waybar/scripts/fcitx5-status.sh"
+    if [ -f "$fcitx5_dst" ]; then
+      chmod +x "$fcitx5_dst"
+      ok "添加执行权限: fcitx5-status.sh"
     fi
   fi
 

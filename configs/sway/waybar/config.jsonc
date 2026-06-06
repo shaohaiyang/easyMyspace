@@ -6,7 +6,7 @@
     "position": "top",
     "height": 28,
     "spacing": 2,
-    "modules-left": ["sway/workspaces", "sway/language"],
+    "modules-left": ["sway/workspaces", "custom/fcitx5"],
     "modules-center": ["clock"],
     "modules-right": [
         "custom/uptime",
@@ -36,9 +36,11 @@
     },
 
     // ==============================
-    // 键盘布局
+    // fcitx5 输入法
     // ==============================
-    "sway/language": {
+    "custom/fcitx5": {
+        "exec": "$HOME/.config/waybar/scripts/fcitx5-status.sh",
+        "interval": 1,
         "format": "{}",
         "tooltip": false
     },

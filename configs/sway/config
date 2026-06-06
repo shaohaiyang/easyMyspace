@@ -86,7 +86,7 @@ bindsym $mod+space exec wofi --show drun
 bindsym $mod+Shift+space exec wofi --show run
 
 # --- 输入法配置 ---
-bindsym $mod+grave exec fcitx5-config-qt
+bindsym $mod+grave exec fcitx5-configtool
 
 # --- 截图（grim + slurp） ---
 bindsym Print exec grim - | wl-copy
@@ -116,7 +116,7 @@ for_window [window_role="task_dialog"] floating enable
 for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] floating enable
 for_window [app_id="wofi"] floating enable
-for_window [app_id="fcitx5-config-qt"] floating enable, invisible 1
+for_window [app_id="fcitx5-configtool"] floating enable, invisible 1
 
 # ==============================================================================
 # 自动启动
@@ -127,6 +127,6 @@ exec swayidle -w \
   resume 'swaymsg "output * dpms on"' \
   before-sleep 'swaylock -f'
 exec swaybg -c '#1e1e2e'
+exec fcitx5 -d -r
 exec mako
 exec waybar
-exec fcitx5 -d -r

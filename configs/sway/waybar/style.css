@@ -57,9 +57,9 @@ window#waybar {
 }
 
 /* ==============================
- * 键盘布局
+ * fcitx5 输入法
  * ============================== */
-#language {
+#custom-fcitx5 {
     background-color: #cba6f7;
     color: #1e1e2e;
     border-radius: 4px;
@@ -79,7 +79,8 @@ window#waybar {
 #network,
 #battery,
 #clock,
-#custom-uptime {
+#custom-uptime,
+#custom-fcitx5 {
     border-radius: 4px;
     margin: 2px 2px;
     padding: 0 8px;
