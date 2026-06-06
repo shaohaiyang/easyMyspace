@@ -66,13 +66,14 @@ echo ""
 # 前置检查：sudo 权限
 # ==============================================================================
 if [ "$EUID" -ne 0 ]; then
-  sudo -n true 2>/dev/null || sudo -v
-  if [ $? -ne 0 ]; then
+  if ! sudo -n true 2>/dev/null && ! sudo -v 2>/dev/null; then
     error "当前用户没有 sudo 权限，无法执行安装"
     echo ""
     echo "  请先以 root 身份将当前用户加入 sudoers："
     echo "    usermod -aG sudo $USER   # Debian/Ubuntu"
     echo "    usermod -aG wheel $USER  # RHEL/Fedora"
+    echo ""
+    echo "  加入 sudo 组后，需要重新登录（logout 再 login）才能生效"
     echo ""
     echo "  或者直接以 root 运行："
     echo "    sudo ./setup.sh"
