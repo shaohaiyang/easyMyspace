@@ -16,6 +16,7 @@ return {
         "ts_ls",
         "gopls",
       },
+      automatic_enable = false,
     },
   },
   {
