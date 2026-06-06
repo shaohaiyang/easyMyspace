@@ -19,7 +19,7 @@ install_packages() {
   # Node.js 22.x（NodeSource）
   info "Setting up Node.js 22.x (NodeSource)..."
   $SUDO apt install -y ca-certificates curl gnupg &>/dev/null
-  curl -fsSL https://deb.nodesource.com/setup_22.x | $SUDO bash -
+  curl -fsSL https://deb.nodesource.com/setup_22.x | $SUDO bash - || true
   ok "Node.js 22.x 源已添加"
 
   info "Updating apt..."
