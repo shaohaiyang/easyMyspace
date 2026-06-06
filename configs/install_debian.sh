@@ -9,11 +9,16 @@ install_packages() {
   CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   [ "$EUID" -eq 0 ] && SUDO="" || SUDO="sudo"
 
-  # 可选清华源切换
+  # 可选清华源切换（Devuan 跳过，使用官方 merged 源）
   local sources_list="$CONFIG_DIR/sway/sources.list"
   if [ -f "$sources_list" ]; then
-    $SUDO cp "$sources_list" /etc/apt/sources.list
-    ok "已切换 apt 源为清华大学镜像"
+    . /etc/os-release 2>/dev/null || true
+    if [ "${ID,,}" = "devuan" ]; then
+      warn "Devuan 系统跳过清华源替换，使用官方 merged 源"
+    else
+      $SUDO cp "$sources_list" /etc/apt/sources.list
+      ok "已切换 apt 源为清华大学镜像"
+    fi
   fi
 
   # Node.js 22.x（NodeSource）

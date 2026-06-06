@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# install_sway.sh — 跨平台 Sway 桌面环境安装脚本（Debian / RHEL）
+# install_sway.sh — 跨平台 Sway 桌面环境安装脚本（Debian / Devuan / RHEL）
 # 用法:
 #   sudo bash install_sway.sh             完整安装
 #   sudo bash install_sway.sh --minimal    仅核心组件
@@ -31,8 +31,9 @@ detect_os() {
   if [ -f /etc/os-release ]; then
     . /etc/os-release
     case "$(echo "$ID" | tr '[:upper:]' '[:lower:]')" in
-      debian|devuan|ubuntu|linuxmint|pop|elementary|zorin|kali) echo "debian" ;;
-      rhel|centos|almalinux|rocky|fedora|ol)            echo "redhat" ;;
+      devuan)            echo "devuan" ;;
+      debian|ubuntu|linuxmint|pop|elementary|zorin|kali) echo "debian" ;;
+      rhel|centos|almalinux|rocky|fedora|ol)             echo "redhat" ;;
       *) echo "unknown" ;;
     esac
   elif [ -f /etc/debian_version ]; then
@@ -48,6 +49,34 @@ OS="$(detect_os)"
 if [ "$OS" = "unknown" ]; then
   echo "不支持的系统" >&2
   exit 1
+fi
+
+# ==============================================================================
+# Devuan 特殊处理：修复 sources.list（避免 Debian 镜像导致包版本冲突）
+# ==============================================================================
+is_devuan_sources_fixed() {
+  [ -f /etc/apt/sources.list ] || return 1
+  grep -q 'deb.devuan.org' /etc/apt/sources.list 2>/dev/null
+}
+
+fix_devuan_sources() {
+  . /etc/os-release
+  local codename="${VERSION_CODENAME:-}"
+  [ -z "$codename" ] && codename="excalibur"
+
+  info "检测到 Devuan 系统使用了非 Devuan 镜像，正在修复 sources.list..."
+  local sources_bak="/etc/apt/sources.list.bak.$(date +%Y%m%d%H%M%S)"
+  cp /etc/apt/sources.list "$sources_bak"
+  cat > /etc/apt/sources.list << EOF
+deb http://deb.devuan.org/merged ${codename} main
+deb http://deb.devuan.org/merged ${codename}-updates main
+deb http://deb.devuan.org/merged ${codename}-security main
+EOF
+  ok "sources.list 已修复（备份: $sources_bak）"
+}
+
+if [ "$OS" = "devuan" ] && ! is_devuan_sources_fixed; then
+  fix_devuan_sources
 fi
 
 # ==============================================================================
@@ -174,7 +203,7 @@ fi
 # 包管理器 & 包名映射
 # ==============================================================================
 case "$OS" in
-  debian)
+  devuan|debian)
     ENABLE_REPO=""
     UPDATE_CMD="apt update -qq"
     INSTALL_CMD="apt install -y"
@@ -186,6 +215,8 @@ case "$OS" in
       kitty foot
       fonts-noto fonts-noto-cjk fonts-noto-color-emoji fonts-liberation
       xwayland
+      # 输入法
+      fcitx5 fcitx5-chinese-addons fcitx5-frontend-gtk3 fcitx5-frontend-gtk4 fcitx5-frontend-qt5
       # locale（neovim 等工具需要 UTF-8）
       locales
     )
@@ -199,6 +230,7 @@ case "$OS" in
       imv mpv
       gammastep
       upower lxappearance mousepad viewnior
+      fcitx5-config-qt
     )
     ;;
 
@@ -214,6 +246,7 @@ case "$OS" in
       google-noto-fonts google-noto-cjk-fonts
       google-noto-emoji-fonts liberation-fonts
       xwayland systemd dbus
+      fcitx5 fcitx5-configtool
     )
 
     optional_pkgs=(
@@ -286,19 +319,23 @@ if ls "$fd"/JetBrains* &>/dev/null 2>&1; then
 elif fc-list | grep -qi "JetBrainsMonoNLNerd" &>/dev/null 2>&1; then
   ok "JetBrains Mono Nerd Font 已存在（系统级）"
 else
-  info "下载 JetBrains Mono Nerd Font..."
-  url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
-  wget -q "$url" -O /tmp/jetbrains.tar.xz \
-    && tar xf /tmp/jetbrains.tar.xz -C "$fd" \
-    && fc-cache -fv "$fd" \
-    && ok "JetBrains Mono Nerd Font 安装完成" \
-    || warn "字体安装失败，请手动下载: $url"
+ info "下载 JetBrains Mono Nerd Font..."
+   url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+   curl -fsSL "$url" -o /tmp/jetbrains.tar.xz \
+     && tar xf /tmp/jetbrains.tar.xz -C "$fd" \
+     && fc-cache -fv "$fd" \
+     && ok "JetBrains Mono Nerd Font 安装完成" \
+     || warn "字体安装失败，请手动下载: $url"
 fi
 
 # ==============================================================================
 # locale
 # ==============================================================================
-$SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成"
+if command -v locale-gen &>/dev/null; then
+  $SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成" || warn "en_US.UTF-8 locale 生成失败"
+else
+  warn "locale-gen 不可用，跳过 en_US.UTF-8 locale 生成"
+fi
 
 # ==============================================================================
 # 用户组
@@ -325,6 +362,7 @@ declare -A CONFIG_MAP=(
   ["waybar/style.css"]="$REAL_HOME/.config/waybar/style.css"
   ["wofi/style.css"]="$REAL_HOME/.config/wofi/style.css"
   ["mako/config"]="$REAL_HOME/.config/mako/config"
+  ["fcitx5/profile/defaultprofile"]="$REAL_HOME/.config/fcitx5/profile/defaultprofile"
 )
 
 for src_rel in "${!CONFIG_MAP[@]}"; do
@@ -370,6 +408,7 @@ echo "    Mod+Space   Wofi 应用启动器"
 echo "    Mod+Shift+q 关闭窗口"
 echo "    Mod+f       切换全屏"
 echo "    Mod+Shift+r 重载 Sway 配置"
+echo "    Mod+grave   fcitx5 输入法设置"
 echo ""
 echo "  需要重新登录以使用户组权限生效"
 echo ""

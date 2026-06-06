@@ -1,0 +1,15 @@
+[Groups/0]
+Name=Default
+Default Layout=us
+Default Input Method=pinyin
+
+[Groups/0/Items/0]
+Name=xkb
+Instance=
+
+[Groups/0/Items/1]
+Name=pinyin
+Instance=
+
+[Group Order]
+0=Default

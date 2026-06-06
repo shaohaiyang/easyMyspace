@@ -18,5 +18,10 @@ export SDL_VIDEODRIVER=wayland
 export CLUTTER_BACKEND=wayland
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-# 启动 Sway
+# 输入法 (fcitx5)
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export SDL_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+export GLFW_IM_MODULE=ibus
 exec sway "$@"
