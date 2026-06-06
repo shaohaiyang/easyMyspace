@@ -2,6 +2,26 @@
 
 一键安装 & 配置高效美观的开发环境。Catppuccin Mocha 主题，`Ctrl+Z` 前缀键体系。
 
+## 前置要求
+
+运行 `setup.sh` 前，系统需已安装以下软件：
+
+- **git** — 克隆仓库
+- **curl** — 在线安装方式
+- **sudo** — 权限提升
+
+Debian/Ubuntu 系安装命令：
+
+```bash
+apt update && apt install -y git curl sudo
+```
+
+RHEL/Fedora 系安装命令：
+
+```bash
+dnf install -y git curl sudo
+```
+
 ## 一行命令安装
 
 ```bash
