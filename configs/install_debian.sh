@@ -64,8 +64,17 @@ install_packages() {
     $SUDO ln -sf "$(command -v batcat)" /usr/local/bin/bat && ok "已创建 bat → batcat 软链接" || warn "创建 bat 软链接失败"
   fi
 
-  info "生成 locale..."
-  $SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成"
+  info "配置 locale..."
+  # 确保 /etc/locale.gen 中包含所需 locale，然后生成
+  for loc in en_US.UTF-8 zh_CN.UTF-8; do
+    if ! locale -a 2>/dev/null | grep -qi "^${loc%.*}"; then
+      $SUDO sed -i "s/^#${loc}/$loc/" /etc/locale.gen 2>/dev/null || \
+        echo "$loc UTF-8" >> /etc/locale.gen
+      $SUDO locale-gen "$loc" &>/dev/null && ok "$loc locale 已生成" || warn "$loc locale 生成失败"
+    else
+      ok "$loc locale 已存在"
+    fi
+  done
 
   install_uv
   install_rust

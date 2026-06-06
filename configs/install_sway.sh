@@ -332,9 +332,17 @@ fi
 # locale
 # ==============================================================================
 if command -v locale-gen &>/dev/null; then
-  $SUDO locale-gen en_US.UTF-8 &>/dev/null && ok "en_US.UTF-8 locale 已生成" || warn "en_US.UTF-8 locale 生成失败"
+  for loc in en_US.UTF-8 zh_CN.UTF-8; do
+    if ! locale -a 2>/dev/null | grep -qi "^${loc%.*}"; then
+      $SUDO sed -i "s/^#${loc}/$loc/" /etc/locale.gen 2>/dev/null || \
+        echo "$loc UTF-8" >> /etc/locale.gen
+      $SUDO locale-gen "$loc" &>/dev/null && ok "$loc locale 已生成" || warn "$loc locale 生成失败"
+    else
+      ok "$loc locale 已存在"
+    fi
+  done
 else
-  warn "locale-gen 不可用，跳过 en_US.UTF-8 locale 生成"
+  warn "locale-gen 不可用，跳过 locale 生成"
 fi
 
 # ==============================================================================

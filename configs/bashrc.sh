@@ -2,6 +2,15 @@
 # Shell 增强片段 — bash 版（由 setup.sh 注入 ~/.bashrc）
 # ==============================================================================
 
+# --- Locale fix: 确保 LC_ALL 使用系统中实际可用的 locale ---
+if locale -a 2>/dev/null | grep -qi '^en_US'; then
+  export LC_ALL=en_US.UTF-8
+elif locale -a 2>/dev/null | grep -qi '^zh_CN'; then
+  export LC_ALL=zh_CN.UTF-8
+else
+  export LC_ALL=C.UTF-8
+fi
+
 # --- Starship 提示符 ---
 if command -v starship &>/dev/null; then
   eval "$(starship init bash)"
