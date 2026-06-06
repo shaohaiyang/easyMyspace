@@ -11,5 +11,9 @@ Instance=
 Name=pinyin
 Instance=
 
+[Groups/0/Items/2]
+Name=wubi98-pinyin
+Instance=
+
 [Group Order]
 0=Default

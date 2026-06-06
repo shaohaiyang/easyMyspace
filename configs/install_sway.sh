@@ -216,7 +216,7 @@ case "$OS" in
       fonts-noto fonts-noto-cjk fonts-noto-color-emoji fonts-liberation
       xwayland
       # 输入法
-      fcitx5 fcitx5-chinese-addons fcitx5-frontend-gtk3 fcitx5-frontend-gtk4 fcitx5-frontend-qt5
+      fcitx5 fcitx5-chinese-addons fcitx5-table-wubi98-pinyin fcitx5-frontend-gtk3 fcitx5-frontend-gtk4 fcitx5-frontend-qt5
       # locale（neovim 等工具需要 UTF-8）
       locales
     )
