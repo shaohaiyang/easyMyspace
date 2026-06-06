@@ -1,15 +1,27 @@
 // =============================================================================
-// Waybar 配置 — Catppuccin Mocha 主题
+// Waybar 配置 — Catppuccin Mocha 主题 · 极客模式
 // =============================================================================
 {
     "layer": "top",
     "position": "top",
     "height": 28,
     "spacing": 2,
-    "modules-left": ["sway/workspaces"],
+    "modules-left": ["sway/workspaces", "sway/language"],
     "modules-center": ["clock"],
-    "modules-right": ["cpu", "memory", "disk", "pulseaudio", "network", "battery"],
+    "modules-right": [
+        "custom/uptime",
+        "cpu",
+        "temperature",
+        "memory",
+        "disk",
+        "pulseaudio",
+        "network",
+        "battery"
+    ],
 
+    // ==============================
+    // 工作区
+    // ==============================
     "sway/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
@@ -23,44 +35,119 @@
         }
     },
 
+    // ==============================
+    // 键盘布局
+    // ==============================
+    "sway/language": {
+        "format": "{}",
+        "tooltip": false
+    },
+
+    // ==============================
+    // CPU
+    // ==============================
     "cpu": {
         "interval": 2,
-        "format": "{}"
+        "format": "{}%",
+        "max-length": 6,
+        "states": {
+            "warning": 70,
+            "critical": 90
+        },
+        "on-click": "kitty htop"
     },
 
+    // ==============================
+    // CPU 温度
+    // ==============================
+    "temperature": {
+        "thermal-zone": 0,
+        "interval": 5,
+        "format": "{temperatureC}°C",
+        "format-critical": "{temperatureC}°C",
+        "critical-threshold": 80,
+        "max-length": 8
+    },
+
+    // ==============================
+    // 内存
+    // ==============================
     "memory": {
         "interval": 2,
-        "format": "{}"
+        "format": "{}%",
+        "max-length": 6,
+        "states": {
+            "warning": 80,
+            "critical": 90
+        },
+        "on-click": "kitty htop"
     },
 
+    // ==============================
+    // 磁盘
+    // ==============================
     "disk": {
         "interval": 30,
-        "format": "{free}"
+        "format": "{}%",
+        "path": "/",
+        "max-length": 6
     },
 
+    // ==============================
+    // 音频
+    // ==============================
     "pulseaudio": {
-        "format": "{icon}",
-        "format-icons": {
-            "default": []
+        "format": "{volume}%",
+        "format-muted": "",
+        "scroll-step": 5,
+        "on-click": "pavucontrol"
+    },
+
+    // ==============================
+    // 网络
+    // ==============================
+    "network": {
+        "interval": 5,
+        "format-wifi": "{signalStrength}%",
+        "format-ethernet": "",
+        "format-disconnected": "",
+        "max-length": 6,
+        "tooltip-format": "{ifname}\n{ipaddr}/{cidr}"
+    },
+
+    // ==============================
+    // 电池
+    // ==============================
+    "battery": {
+        "interval": 30,
+        "format": "{capacity}%",
+        "format-discharging": "{capacity}%",
+        "format-charging": "{capacity}%",
+        "format-full": "",
+        "max-length": 6,
+        "states": {
+            "warning": 20,
+            "critical": 10
         }
     },
 
-    "network": {
-        "interval": 3,
-        "format": "{ifname}",
-        "format-disconnected": ""
-    },
-
-    "battery": {
-        "interval": 60,
-        "format": "{capacity}%",
-        "format-charging": "{capacity}%",
-        "format-discharging": "{capacity}%",
-        "format-full": ""
-    },
-
+    // ==============================
+    // 时钟
+    // ==============================
     "clock": {
         "interval": 1,
-        "format": "{:%Y-%m-%d %H:%M:%S}"
+        "format": "{:%Y-%m-%d %H:%M:%S}",
+        "tooltip-format": "{:%Y %B %d (%A)}\n<tt><small>{calendar}</small></tt>",
+        "max-length": 22
+    },
+
+    // ==============================
+    // 系统运行时间
+    // ==============================
+    "custom/uptime": {
+        "exec": "uptime -p | sed 's/up //; s/days/d/g; s/day/d/g; s/hours/h/g; s/hour/h/g; s/minutes/m/g; s/minute/m/g; s/,//g'",
+        "interval": 60,
+        "format": "{}",
+        "max-length": 24
     }
 }

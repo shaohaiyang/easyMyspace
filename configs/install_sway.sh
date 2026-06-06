@@ -229,8 +229,7 @@ case "$OS" in
       thunar thunar-archive-plugin thunar-volman file-roller gvfs
       imv mpv
       gammastep
-      upower lxappearance mousepad viewnior
-      fcitx5-config-qt
+      upower lxappearance
     )
     ;;
 
@@ -257,7 +256,7 @@ case "$OS" in
       thunar thunar-archive-plugin thunar-volman file-roller gvfs
       imv mpv
       gammastep
-      upower lxappearance mousepad viewnior
+      upower lxappearance
     )
     ;;
 esac
@@ -370,6 +369,7 @@ declare -A CONFIG_MAP=(
   ["waybar/style.css"]="$REAL_HOME/.config/waybar/style.css"
   ["wofi/style.css"]="$REAL_HOME/.config/wofi/style.css"
   ["mako/config"]="$REAL_HOME/.config/mako/config"
+  ["fcitx5/config"]="$REAL_HOME/.config/fcitx5/config"
   ["fcitx5/profile/defaultprofile"]="$REAL_HOME/.config/fcitx5/profile/defaultprofile"
 )
 

@@ -1,48 +1,221 @@
 /* ==============================================================================
- * Waybar 样式 — Catppuccin Mocha 主题
+ * Waybar 样式 — Catppuccin Mocha · Pill 模块风格
  * ============================================================================== */
 
 * {
-    font-family: "JetBrains Mono", "Noto Sans CJK SC", sans-serif;
+    font-family: "JetBrainsMonoNLNerdFont", "JetBrains Mono", "Noto Sans CJK SC", sans-serif;
     font-size: 12px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
 }
 
 window#waybar {
     background-color: #1e1e2e;
     color: #cdd6f4;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+/* ==============================
+ * 窗口标题（备用的 left 模块）
+ * ============================== */
+#window {
+    margin: 0 4px;
+}
+
+/* ==============================
+ * 工作区
+ * ============================== */
+#workspaces {
+    margin: 2px 4px;
 }
 
 #workspaces button {
     padding: 0 4px;
-    background-color: transparent;
+    background-color: #313244;
     color: #585b70;
+    border-radius: 4px;
+    margin: 0 1px;
 }
 
 #workspaces button.active {
-    background-color: #313244;
-    color: #89b4fa;
+    background-color: #89b4fa;
+    color: #1e1e2e;
 }
 
 #workspaces button.urgent {
-    background-color: #313244;
-    color: #f38ba8;
+    background-color: #f38ba8;
+    color: #1e1e2e;
 }
 
+#workspaces button:hover {
+    box-shadow: none;
+    text-shadow: none;
+    background-color: #45475a;
+    color: #cdd6f4;
+}
+
+/* ==============================
+ * 键盘布局
+ * ============================== */
+#language {
+    background-color: #cba6f7;
+    color: #1e1e2e;
+    border-radius: 4px;
+    margin: 2px 4px 2px 0;
+    padding: 0 6px;
+    font-weight: bold;
+}
+
+/* ==============================
+ * 通用模块样式（pill 风格）
+ * ============================== */
 #cpu,
+#temperature,
 #memory,
 #disk,
 #pulseaudio,
 #network,
 #battery,
-#clock {
+#clock,
+#custom-uptime {
+    border-radius: 4px;
+    margin: 2px 2px;
     padding: 0 8px;
+}
+
+/* ==============================
+ * CPU
+ * ============================== */
+#cpu {
+    background-color: #313244;
+    color: #89b4fa;
+}
+
+#cpu.warning {
+    background-color: #f9e2af;
+    color: #1e1e2e;
+}
+
+#cpu.critical {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* ==============================
+ * 温度
+ * ============================== */
+#temperature {
+    background-color: #313244;
+    color: #fab387;
+}
+
+#temperature.critical {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* ==============================
+ * 内存
+ * ============================== */
+#memory {
+    background-color: #313244;
+    color: #cba6f7;
+}
+
+#memory.warning {
+    background-color: #f9e2af;
+    color: #1e1e2e;
+}
+
+#memory.critical {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* ==============================
+ * 磁盘
+ * ============================== */
+#disk {
+    background-color: #313244;
+    color: #a6e3a1;
+}
+
+/* ==============================
+ * 音频
+ * ============================== */
+#pulseaudio {
+    background-color: #313244;
+    color: #a6e3a1;
+}
+
+#pulseaudio.muted {
+    background-color: #313244;
+    color: #585b70;
+}
+
+/* ==============================
+ * 网络
+ * ============================== */
+#network {
+    background-color: #313244;
+    color: #94e2d5;
+}
+
+#network.disconnected {
+    background-color: #313244;
+    color: #585b70;
+}
+
+/* ==============================
+ * 电池
+ * ============================== */
+#battery {
+    background-color: #313244;
     color: #a6adc8;
 }
 
-#cpu { color: #89b4fa; }
-#memory { color: #cba6f7; }
-#disk { color: #a6adc8; }
-#pulseaudio { color: #a6e3a1; }
-#network { color: #94e2d5; }
-#battery { color: #f9e2af; }
-#clock { color: #f9e2af; }
+#battery.charging {
+    background-color: #313244;
+    color: #a6e3a1;
+}
+
+#battery.warning {
+    background-color: #f9e2af;
+    color: #1e1e2e;
+}
+
+#battery.critical {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* ==============================
+ * 时钟
+ * ============================== */
+#clock {
+    background-color: #313244;
+    color: #f9e2af;
+}
+
+/* ==============================
+ * 系统运行时间
+ * ============================== */
+#custom-uptime {
+    background-color: #313244;
+    color: #94e2d5;
+}
+
+/* ==============================
+ * Tooltip
+ * ============================== */
+tooltip {
+    background-color: #1e1e2e;
+    border: 1px solid #45475a;
+    border-radius: 4px;
+}
+
+tooltip label {
+    color: #cdd6f4;
+}

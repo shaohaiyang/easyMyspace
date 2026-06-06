@@ -1,0 +1,10 @@
+[Hotkey]
+TriggerKeys=Control+Space
+EnumerateWithTriggerKeys=true
+AltSwitchKey=Shift_L
+
+[Behavior]
+DefaultInputMode=1
+ShowInputMethodInformation=true
+ShareInputState=No
+PreeditEnabledByDefault=False

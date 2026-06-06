@@ -93,6 +93,34 @@ if ! command -v curl &>/dev/null; then
 fi
 
 # ==============================================================================
+# 工具函数：安装 bat Catppuccin Mocha 主题
+# ==============================================================================
+ensure_bat_theme() {
+  local bat_cmd
+  bat_cmd="$(command -v batcat 2>/dev/null || command -v bat 2>/dev/null)" || return 0
+
+  if "$bat_cmd" --list-themes 2>/dev/null | grep -q "Catppuccin Mocha"; then
+    ok "bat Catppuccin Mocha 主题已存在"
+    return
+  fi
+
+  info "安装 bat Catppuccin Mocha 主题..."
+  local theme_dir config_dir
+  config_dir="$("$bat_cmd" --config-dir 2>/dev/null)" || return 0
+  theme_dir="$config_dir/themes"
+  mkdir -p "$theme_dir"
+
+  if curl -fsSL "https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme" \
+    -o "$theme_dir/Catppuccin Mocha.tmTheme"; then
+    "$bat_cmd" cache --build &>/dev/null && \
+      ok "bat Catppuccin Mocha 主题已安装" || \
+      warn "bat 主题缓存重建失败"
+  else
+    warn "bat Catppuccin Mocha 主题下载失败，使用默认主题"
+  fi
+}
+
+# ==============================================================================
 # Phase 1: 安装工具
 # ==============================================================================
 if $DO_TOOLS; then
@@ -104,6 +132,7 @@ if $DO_TOOLS; then
   else
     install_packages
     ensure_fonts
+    ensure_bat_theme
   fi
 fi
 
