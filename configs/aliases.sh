@@ -5,7 +5,7 @@
 
 # --- 文件管理 ---
 alias f="yazi"
-alias tree="eza -T --icons=auto"
+{ command -v eza &>/dev/null && alias tree="eza -T --icons=auto"; } || alias tree="tree"
 
 # --- Git ---
 alias g="lazygit"

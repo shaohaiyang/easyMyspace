@@ -52,17 +52,26 @@ if command -v fzf &>/dev/null; then
   "
 
   if [ -n "$ZSH_VERSION" ]; then
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      _copy_cmd="pbcopy"
+    elif command -v wl-copy &>/dev/null; then
+      _copy_cmd="wl-copy"
+    else
+      _copy_cmd="tee > /dev/null"
+    fi
+
     fzf-git-branch() {
-      git branch -a --color=always | fzf --height 50% --ansi --preview 'echo {}' | tr -d ' *' | head -n 1 | tr -d '\n' | pbcopy
+      git branch -a --color=always | fzf --height 50% --ansi --preview 'echo {}' | tr -d ' *' | head -n 1 | tr -d '\n' | $_copy_cmd
       zle reset-prompt
     }
     zle -N fzf-git-branch
 
     fzf-git-log() {
-      git log --oneline --graph --color=always | fzf --height 50% --ansi --preview 'echo {}' | awk '{print $1}' | tr -d '\n' | pbcopy
+      git log --oneline --graph --color=always | fzf --height 50% --ansi --preview 'echo {}' | awk '{print $1}' | tr -d '\n' | $_copy_cmd
       zle reset-prompt
     }
     zle -N fzf-git-log
+    unset _copy_cmd
   fi
 fi
 
@@ -109,19 +118,17 @@ fi
 
 if command -v bat &>/dev/null; then
   alias cat="bat --theme='Catppuccin Mocha'"
+elif command -v batcat &>/dev/null; then
+  alias cat="batcat --theme='Catppuccin Mocha'"
 fi
 
 if command -v fd &>/dev/null; then
   alias findf="fd"
 fi
-
-if command -v tealdeer &>/dev/null; then
-  alias help="tldr"
-fi
-
-alias grep="rg"
-alias diff="delta"
-alias top="btop"
+if command -v rg &>/dev/null; then alias grep="rg"; fi
+if command -v delta &>/dev/null; then alias diff="delta"; fi
+if command -v btop &>/dev/null; then alias top="btop"; fi
+if command -v tldr &>/dev/null; then alias help="tldr"; fi
 
 # -------------------- 6. 开发工具别名 --------------------
 alias g="lazygit"
