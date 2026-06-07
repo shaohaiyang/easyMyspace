@@ -60,6 +60,7 @@ install_packages() {
   install_tpm
   install_opencode
   install_omp
+  install_dmux
 
   # 通过 cargo 补充安装 repo 中没有的工具
   install_cargo_extras
@@ -241,6 +242,21 @@ install_omp() {
       || warn "oh-my-pi install failed"
   else
     warn "bun install failed, skipping oh-my-pi"
+  fi
+}
+
+install_dmux() {
+  if command -v dmux &>/dev/null; then
+    ok "dmux already installed"
+    return
+  fi
+  info "Installing dmux via npm..."
+  if command -v npm &>/dev/null; then
+    npm install -g dmux \
+      && ok "dmux installed" \
+      || warn "dmux install failed"
+  else
+    warn "npm not found, skipping dmux (Node.js required)"
   fi
 }
 
