@@ -16,7 +16,9 @@ return {
         sort_function = function(a, b)
           if a.type == "directory" and b.type ~= "directory" then return true end
           if a.type ~= "directory" and b.type == "directory" then return false end
-          return a.name < b.name
+          local aname = a.name or ""
+          local bname = b.name or ""
+          return aname < bname
         end,
         filesystem = {
           follow_current_file = { enabled = true },
