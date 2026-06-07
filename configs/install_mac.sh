@@ -10,7 +10,9 @@ install_packages() {
   if ! command -v brew &>/dev/null; then
     info "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+    for _p in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+      [ -x "$_p" ] && eval "$("$_p" shellenv)" && break
+    done
     ok "Homebrew installed"
   else
     ok "Homebrew already installed"
@@ -215,10 +217,12 @@ install_dmux() {
 }
 
 ensure_fonts() {
-  local jb_dir="/Library/Fonts"
-  if ls "$jb_dir"/JetBrains* &>/dev/null 2>&1; then
-    ok "JetBrains Mono font found"
-  else
-    warn "JetBrains Mono font not found in $jb_dir"
-  fi
+  local jb_dirs=("/Library/Fonts" "$HOME/Library/Fonts")
+  for jb_dir in "${jb_dirs[@]}"; do
+    if ls "$jb_dir"/JetBrains* &>/dev/null 2>&1; then
+      ok "JetBrains Mono font found in $jb_dir"
+      return
+    fi
+  done
+  warn "JetBrains Mono font not found in /Library/Fonts or ~/Library/Fonts"
 }
