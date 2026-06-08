@@ -259,7 +259,7 @@ install_dmux() {
   fi
   info "Installing dmux via npm..."
   if command -v npm &>/dev/null; then
-    npm install -g dmux \
+    $SUDO npm install -g dmux \
       && ok "dmux installed" \
       || warn "dmux install failed"
   else
