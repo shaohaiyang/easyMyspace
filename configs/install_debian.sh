@@ -84,6 +84,7 @@ install_packages() {
   install_opencode
   install_omp
   install_dmux
+  install_herdr
 }
 
 install_uv() {
@@ -265,6 +266,17 @@ install_dmux() {
   else
     warn "npm not found, skipping dmux (Node.js required)"
   fi
+}
+
+install_herdr() {
+  if command -v herdr &>/dev/null; then
+    ok "herdr already installed"
+    return
+  fi
+  info "Installing herdr via official script..."
+  curl -fsSL https://herdr.dev/install.sh | sh \
+    && ok "herdr installed" \
+    || warn "herdr install failed"
 }
 
 ensure_fonts() {

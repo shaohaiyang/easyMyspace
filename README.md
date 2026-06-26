@@ -81,6 +81,7 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **Sway 桌面** | Linux | sway、waybar、wofi、mako、kitty、Thunar、PipeWire 等 |
 | **开发运行时** | 全平台 | Node.js 22.x（NodeSource）、Rust、uv、Go |
 | **AI 工具** | 全平台 | opencode（AI 编程）、oh-my-pi（via bun） |
+| **终端增强** | 全平台 | herdr（终端复用器，tmux 替代） |
 
 ## 配置总览
 
@@ -95,6 +96,7 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **Git** | 别名集（g=gitu gi=gitu）+ delta 彩色 diff |
 | **opencode** | AI 编程助手，多 Provider 配置 |
 | **Oh-my-Pi** | AI 编码 agent（via bun） |
+| **herdr** | 终端复用器（tmux 替代），`Ctrl+B` 前缀，支持 AI agent 管理、会话持久化、远程连接 |
 | **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi + Mako 主题化，swaylock 锁屏 + swayidle 自动息屏，截图快捷键 |
 
 ## 主题配色
@@ -129,6 +131,25 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **缩放** | `z` 全屏 · `Ctrl+z` 恢复 |
 | **复制模式** | `[` 进入 · 空格 选择 · `y` 复制 |
 | **插件管理** | `Ctrl+Z` + `I`（安装）
+
+### Herdr 键位
+
+| 功能 | 快捷键 |
+|------|--------|
+| **前缀键** | `Ctrl+B`（避免与 Kitty `Ctrl+Z` 冲突） |
+| **左右分屏** | `prefix+-` |
+| **分屏交换** | `prefix+h/j/k/l`（Vim 风格） |
+| **分屏循环** | `prefix+.`（下一个）· `prefix+Shift+Tab`（上一个） |
+| **缩放分屏** | `prefix+Shift+z` |
+| **关闭分屏** | `prefix+x` |
+| **调整大小** | `prefix+r`（进入调整模式后 hjkl） |
+| **Tab 管理** | `prefix+c`（新建）· `n`（下一个）· `p`（上一个）· `comma`（重命名）· `Shift+x`（关闭） |
+| **工作区管理** | `prefix+Shift+n`（新建）· `Shift+d`（关闭）· `Shift+w`（重命名）· `w`（选择器） |
+| **复制模式** | `prefix+Shift+c` |
+| **侧边栏** | `prefix+b` |
+| **分离** | `prefix+d` |
+| **快捷应用** | `prefix+o`（opencode）· `g`（lazygit）· `e`（yazi）· `\`（htop）——继承当前 pane 目录 |
+| **重载配置** | `prefix+Shift+r` |
 
 ### Sway 键位
 

@@ -1,0 +1,130 @@
+# ==============================================================================
+# Herdr 配置 — Catppuccin Mocha 主题
+# Ctrl+B 前缀（避免与 Kitty 的 Ctrl+Z 体系冲突）
+# ==============================================================================
+
+onboarding = false
+
+# --- 前缀键 Ctrl+B ---
+[keys]
+prefix = "ctrl+b"
+
+# --- 分屏 ---
+split_horizontal = "prefix+-"
+split_vertical = ""
+
+# --- Tab/窗口管理 ---
+new_tab = "prefix+c"
+next_tab = "prefix+n"
+previous_tab = "prefix+p"
+rename_tab = "prefix+comma"
+close_tab = "prefix+shift+x"
+
+# --- Vim 风格分屏交换 ---
+swap_pane_left = "prefix+h"
+swap_pane_down = "prefix+j"
+swap_pane_up = "prefix+k"
+swap_pane_right = "prefix+l"
+
+# --- 分屏循环 ---
+cycle_pane_next = "prefix+period"
+cycle_pane_previous = "prefix+shift+tab"
+
+# --- 调整分屏大小（进入调整模式后 hjkl） ---
+resize_mode = "prefix+r"
+
+# --- 缩放分屏 ---
+zoom = "prefix+shift+z"
+
+# --- 关闭分屏 ---
+close_pane = "prefix+x"
+
+# --- 工作区管理 ---
+new_workspace = "prefix+shift+n"
+close_workspace = "prefix+shift+d"
+rename_workspace = "prefix+shift+w"
+workspace_picker = "prefix+w"
+
+# --- 复制模式 ---
+copy_mode = "prefix+shift+c"
+
+# --- 侧边栏 ---
+toggle_sidebar = "prefix+b"
+
+# --- 分离 ---
+detach = "prefix+d"
+
+# --- 最后一个分屏 ---
+last_pane = "prefix+tab"
+
+# --- 取消默认冲突绑定 ---
+# prefix+g 默认是 goto，改为启动 lazygit
+goto = ""
+
+# --- 快捷应用（自定义命令） ---
+[[keys.command]]
+key = "prefix+backslash"
+type = "pane"
+command = "htop"
+description = "htop"
+
+[[keys.command]]
+key = "prefix+o"
+type = "pane"
+command = "cd \"$HERDR_ACTIVE_PANE_CWD\" && opencode"
+description = "opencode"
+
+[[keys.command]]
+key = "prefix+g"
+type = "pane"
+command = "cd \"$HERDR_ACTIVE_PANE_CWD\" && lazygit"
+description = "lazygit"
+
+[[keys.command]]
+key = "prefix+e"
+type = "pane"
+command = "cd \"$HERDR_ACTIVE_PANE_CWD\" && yazi"
+description = "yazi"
+
+[[keys.command]]
+key = "prefix+shift+r"
+type = "shell"
+command = "herdr server reload-config"
+description = "reload config"
+
+# --- 主题 ---
+[theme]
+name = "catppuccin"
+auto_switch = true
+light_name = "catppuccin-latte"
+dark_name = "catppuccin"
+
+# --- UI ---
+[ui]
+sidebar_width = 32
+sidebar_min_width = 18
+sidebar_max_width = 36
+mouse_capture = true
+pane_borders = true
+pane_gaps = true
+confirm_close = true
+prompt_new_tab_name = true
+accent = "blue"
+
+# --- 终端 ---
+[terminal]
+default_shell = ""
+shell_mode = "auto"
+new_cwd = "follow"
+
+# --- 通知 ---
+[ui.toast]
+delivery = "off"
+
+# --- 声音 ---
+[ui.sound]
+enabled = true
+
+# --- 滚动 ---
+[advanced]
+scrollback_limit_bytes = 10485760
