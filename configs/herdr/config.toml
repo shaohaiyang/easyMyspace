@@ -98,20 +98,34 @@ type = "shell"
 command = "herdr server reload-config"
 description = "reload config"
 
-# --- 主题 ---
+# --- 主题（五彩醒目版） ---
 [theme]
-name = "catppuccin"
-auto_switch = true
-light_name = "catppuccin-latte"
-dark_name = "catppuccin"
+name = "custom"
+auto_switch = false
 
 [theme.custom]
-panel_bg = "reset"
-accent = "#89b4fa"
-green = "#a6e3a1"
-blue = "#89b4fa"
-red = "#f38ba8"
-yellow = "#f9e2af"
+panel_bg = "#050508"
+accent = "#ff88ff"
+green = "#44ff88"
+blue = "#44ddff"
+red = "#ff2255"
+yellow = "#ffdd00"
+magenta = "#ff88ff"
+cyan = "#44ffff"
+orange = "#ff9922"
+pink = "#ff77cc"
+purple = "#bb77ff"
+lime = "#bbff22"
+teal = "#44ffcc"
+coral = "#ff7777"
+gold = "#ffcc22"
+mauve = "#ff44aa"
+peach = "#ff8833"
+surface_dim = "#111118"
+text = "#eeeeee"
+silver = "#c0c0c0"
+white = "#ffffff"
+black = "#000000"
 
 # --- UI ---
 [ui]
