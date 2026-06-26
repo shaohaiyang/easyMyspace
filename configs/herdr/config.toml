@@ -99,6 +99,14 @@ auto_switch = true
 light_name = "catppuccin-latte"
 dark_name = "catppuccin"
 
+[theme.custom]
+panel_bg = "reset"
+accent = "#89b4fa"
+green = "#a6e3a1"
+blue = "#89b4fa"
+red = "#f38ba8"
+yellow = "#f9e2af"
+
 # --- UI ---
 [ui]
 sidebar_width = 32
