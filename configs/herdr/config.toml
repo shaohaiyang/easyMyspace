@@ -20,11 +20,11 @@ previous_tab = "prefix+p"
 rename_tab = "prefix+comma"
 close_tab = "prefix+shift+x"
 
-# --- Vim 风格分屏交换 ---
-swap_pane_left = "prefix+h"
-swap_pane_down = "prefix+j"
-swap_pane_up = "prefix+k"
-swap_pane_right = "prefix+l"
+# --- Vim 风格分屏焦点 ---
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
 
 # --- 分屏循环 ---
 cycle_pane_next = "prefix+period"
