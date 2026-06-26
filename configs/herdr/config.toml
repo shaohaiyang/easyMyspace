@@ -11,7 +11,7 @@ prefix = "ctrl+b"
 
 # --- 分屏 ---
 split_horizontal = "prefix+-"
-split_vertical = ""
+split_vertical = "prefix+v"
 
 # --- Tab/窗口管理 ---
 new_tab = "prefix+c"
