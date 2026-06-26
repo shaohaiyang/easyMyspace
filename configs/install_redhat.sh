@@ -278,13 +278,31 @@ install_gonzo() {
     ok "gonzo already installed"
     return
   fi
-  if command -v go &>/dev/null; then
-    info "Installing gonzo via go install..."
-    go install github.com/control-theory/gonzo/cmd/gonzo@latest \
-      && ok "gonzo installed" \
-      || warn "gonzo install failed"
+
+  local arch triple
+  arch="$(uname -m)"
+  case "$arch" in
+    x86_64)  triple="linux-amd64" ;;
+    aarch64|arm64) triple="linux-arm64" ;;
+    *)       warn "unsupported arch: $arch, skipping gonzo"; return 1 ;;
+  esac
+
+  local version="v0.4.2"
+  local url="https://github.com/control-theory/gonzo/releases/download/${version}/gonzo-${version}-${triple}.tar.gz"
+
+  info "Downloading gonzo ${version} (${triple})..."
+  local tmp_dir
+  tmp_dir="$(mktemp -d)"
+  if curl -fsSL "$url" -o "$tmp_dir/gonzo.tar.gz"; then
+    tar -xzf "$tmp_dir/gonzo.tar.gz" -C "$tmp_dir" gonzo
+    mkdir -p "$HOME/.local/bin"
+    cp "$tmp_dir/gonzo" "$HOME/.local/bin/gonzo"
+    chmod +x "$HOME/.local/bin/gonzo"
+    rm -rf "$tmp_dir"
+    ok "gonzo installed to ~/.local/bin/gonzo"
   else
-    warn "go not found, skipping gonzo"
+    rm -rf "$tmp_dir"
+    warn "gonzo download failed"
   fi
 }
 

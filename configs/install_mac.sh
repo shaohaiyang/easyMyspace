@@ -48,7 +48,7 @@ install_packages() {
     glow                # Markdown 终端渲染 (yazi 预览)
     poppler             # PDF 预览 (pdftoppm)
     sevenzip            # 归档预览 (7zz)
-    gonzo               # 日志分析 TUI
+    # gonzo 通过 install_gonzo 函数安装（下载预编译二进制）
   )
 
   info "Installing casks..."
@@ -75,6 +75,7 @@ install_packages() {
   install_omp
   install_dmux
   install_herdr
+  install_gonzo
 }
 
 install_yazi() {
@@ -227,6 +228,39 @@ install_herdr() {
   brew install herdr \
     && ok "herdr installed" \
     || warn "herdr install failed"
+}
+
+install_gonzo() {
+  if command -v gonzo &>/dev/null; then
+    ok "gonzo already installed"
+    return
+  fi
+
+  local arch triple
+  arch="$(uname -m)"
+  case "$arch" in
+    x86_64)  triple="darwin-amd64" ;;
+    aarch64|arm64) triple="darwin-arm64" ;;
+    *)       warn "unsupported arch: $arch, skipping gonzo"; return 1 ;;
+  esac
+
+  local version="v0.4.2"
+  local url="https://github.com/control-theory/gonzo/releases/download/${version}/gonzo-${version}-${triple}.tar.gz"
+
+  info "Downloading gonzo ${version} (${triple})..."
+  local tmp_dir
+  tmp_dir="$(mktemp -d)"
+  if curl -fsSL "$url" -o "$tmp_dir/gonzo.tar.gz"; then
+    tar -xzf "$tmp_dir/gonzo.tar.gz" -C "$tmp_dir" gonzo
+    mkdir -p "$HOME/.local/bin"
+    cp "$tmp_dir/gonzo" "$HOME/.local/bin/gonzo"
+    chmod +x "$HOME/.local/bin/gonzo"
+    rm -rf "$tmp_dir"
+    ok "gonzo installed to ~/.local/bin/gonzo"
+  else
+    rm -rf "$tmp_dir"
+    warn "gonzo download failed"
+  fi
 }
 
 ensure_fonts() {
