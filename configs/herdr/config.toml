@@ -10,7 +10,7 @@ onboarding = false
 prefix = "ctrl+b"
 
 # --- 分屏 ---
-split_horizontal = "prefix+-"
+split_horizontal = "prefix+u"
 split_vertical = "prefix+v"
 
 # --- Tab/窗口管理 ---
