@@ -76,11 +76,12 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 
 | 模块 | 平台 | 说明 |
 |------|------|------|
-| **基础工具** | Debian / RHEL | tmux、neovim、fzf、bat、ripgrep、git、openssh-server、btop、tealdeer、glow、gitu 等 |
+| **基础工具** | Debian / RHEL | tmux、neovim、fzf、bat、ripgrep、git、openssh-server、btop、tealdeer、glow、gitu、gonzo 等 |
 | **macOS 工具** | macOS | 同上 via Homebrew |
 | **Sway 桌面** | Linux | sway、waybar、wofi、mako、kitty、Thunar、PipeWire 等 |
 | **开发运行时** | 全平台 | Node.js 22.x（NodeSource）、Rust、uv、Go |
 | **AI 工具** | 全平台 | opencode（AI 编程）、oh-my-pi（via bun） |
+| **日志分析** | 全平台 | gonzo（Go TUI 日志分析工具） |
 | **终端增强** | 全平台 | herdr（终端复用器，tmux 替代） |
 
 ## 配置总览
@@ -97,6 +98,7 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **opencode** | AI 编程助手，多 Provider 配置 |
 | **Oh-my-Pi** | AI 编码 agent（via bun） |
 | **herdr** | 终端复用器（tmux 替代），`Ctrl+B` 前缀，支持 AI agent 管理、会话持久化、远程连接 |
+| **gonzo** | 日志分析 TUI，支持实时流、K8s 集成、AI 分析、OTLP 协议 |
 | **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi + Mako 主题化，swaylock 锁屏 + swayidle 自动息屏，截图快捷键 |
 
 ## 主题配色

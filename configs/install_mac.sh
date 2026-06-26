@@ -48,6 +48,7 @@ install_packages() {
     glow                # Markdown 终端渲染 (yazi 预览)
     poppler             # PDF 预览 (pdftoppm)
     sevenzip            # 归档预览 (7zz)
+    gonzo               # 日志分析 TUI
   )
 
   info "Installing casks..."

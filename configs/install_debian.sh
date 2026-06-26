@@ -85,6 +85,7 @@ install_packages() {
   install_omp
   install_dmux
   install_herdr
+  install_gonzo
 }
 
 install_uv() {
@@ -277,6 +278,21 @@ install_herdr() {
   curl -fsSL https://herdr.dev/install.sh | sh \
     && ok "herdr installed" \
     || warn "herdr install failed"
+}
+
+install_gonzo() {
+  if command -v gonzo &>/dev/null; then
+    ok "gonzo already installed"
+    return
+  fi
+  if command -v go &>/dev/null; then
+    info "Installing gonzo via go install..."
+    go install github.com/control-theory/gonzo/cmd/gonzo@latest \
+      && ok "gonzo installed" \
+      || warn "gonzo install failed"
+  else
+    warn "go not found, skipping gonzo"
+  fi
 }
 
 ensure_fonts() {
