@@ -88,7 +88,7 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 
 | 工具 | 说明 |
 |------|------|
-| **Kitty** | 终端模拟器，`Ctrl+Z` 前缀键，Catppuccin Mocha 主题 |
+| **Kitty** | 终端模拟器，`Ctrl+Z` 前缀键，Catppuccin Mocha 主题；详见[输入法配置](#kitty-输入法--fcitx5-配置) |
 | **Tmux** | 终端复用器，tpm 插件 + resurrect/continuum 会话持久化 |
 | **Starship** | 极简提示符，Catppuccin 配色 |
 | **Shell** | macOS 用 zsh+aliases，Linux 用 bash+fzf+zoxide |
@@ -171,3 +171,57 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **自动息屏** | 闲置 10 分钟关闭显示器，活动后恢复 |
 
 截图保存至 `~/Pictures/Screenshots/` 目录，配合 `Mod+Shift+R` 重启 Sway 使配置生效。
+
+## Kitty 输入法 — fcitx5 配置
+
+### 问题
+
+Kitty 在 X11 下使用 GLFW 作为输入后端，而 GLFW **只支持 IBus 协议**。因此 fcitx5 需要通过 IBus 兼容层与 kitty 通信。若不设置 `GLFW_IM_MODULE=ibus`，fcitx5 收不到键
+
+入事件，Shift 切换输入法等功能会失效。
+
+### 症状
+
+- 浏览器、VSCode、系统原生终端：Shift 可正常切换输入法
+- Kitty：Shift 切换失效
+
+### 解决方案
+
+#### 方式一：Desktop 文件（推荐）
+
+修改 `~/.local/share/applications/kitty.desktop`：
+
+```
+Exec=env GLFW_IM_MODULE=ibus kitty
+```
+
+#### 方式二：Sway 启动脚本
+
+已在 `configs/sway/start_sway.sh` 中设置：
+
+```bash
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export SDL_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+export GLFW_IM_MODULE=ibus
+```
+
+#### 方式三：Kitty 配置文件
+
+`configs/kitty.conf` 中已有：
+
+```
+env GLFW_IM_MODULE=ibus
+```
+
+注意：此方式仅对 **kitty 的子进程** 生效，kitty 自身读取 `GLFW_IM_MODULE` 仍需在启动前设置（方式一或二）。
+
+### 验证
+
+```bash
+# 确认 kitty 进程环境中已有该变量
+cat /proc/$(pidof kitty)/environ 2>/dev/null | tr '\0' '\n' | grep GLFW_IM_MODULE
+```
+
+若输出 `GLFW_IM_MODULE=ibus` 即配置生效。
