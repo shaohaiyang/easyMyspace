@@ -48,6 +48,7 @@ install_packages() {
     glow                # Markdown 终端渲染 (yazi 预览)
     poppler             # PDF 预览 (pdftoppm)
     sevenzip            # 归档预览 (7zz)
+    gh                  # GitHub CLI
     # gonzo 通过 install_gonzo 函数安装（下载预编译二进制）
   )
 

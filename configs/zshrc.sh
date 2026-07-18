@@ -3,6 +3,14 @@
 # 兼容 zsh 和 bash，zsh 专属功能用条件判断包裹
 # ==============================================================================
 
+# -------------------- 0. Locale fix: 确保 LC_ALL 使用实际可用的 locale ---
+_locale=$(locale -a 2>/dev/null | grep -im1 '^en_US') && \
+  export LC_ALL="$_locale" || \
+  _locale=$(locale -a 2>/dev/null | grep -im1 '^zh_CN') && \
+    export LC_ALL="$_locale" || \
+    export LC_ALL="C.UTF-8"
+unset _locale
+
 # -------------------- 0. Starship 提示符 --------------------
 if command -v starship &>/dev/null; then
   eval "$(starship init zsh)"

@@ -53,6 +53,8 @@ install_packages() {
     libssl-dev zlib1g-dev
     # 运行时
     nodejs
+    # GitHub CLI
+    gh
   )
 
   $SUDO apt install -y "${packages[@]}"

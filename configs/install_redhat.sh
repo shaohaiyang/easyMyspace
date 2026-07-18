@@ -39,6 +39,7 @@ install_packages() {
     # 运行时（Node.js 需 NodeSource 或 EPEL）
     nodejs npm
     golang luarocks
+    gh
   )
 
   # starship, eza, zoxide, delta, lazygit, tree-sitter 可能部分在 EPEL 中

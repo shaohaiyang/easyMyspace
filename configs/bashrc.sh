@@ -3,13 +3,12 @@
 # ==============================================================================
 
 # --- Locale fix: 确保 LC_ALL 使用系统中实际可用的 locale ---
-if locale -a 2>/dev/null | grep -qi '^en_US'; then
-  export LC_ALL=en_US.UTF-8
-elif locale -a 2>/dev/null | grep -qi '^zh_CN'; then
-  export LC_ALL=zh_CN.UTF-8
-else
-  export LC_ALL=C.UTF-8
-fi
+_locale=$(locale -a 2>/dev/null | grep -im1 '^en_US') && \
+  export LC_ALL="$_locale" || \
+  _locale=$(locale -a 2>/dev/null | grep -im1 '^zh_CN') && \
+    export LC_ALL="$_locale" || \
+    export LC_ALL="C.UTF-8"
+unset _locale
 
 # --- Starship 提示符 ---
 if command -v starship &>/dev/null; then
