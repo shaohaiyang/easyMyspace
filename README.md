@@ -55,10 +55,12 @@ configs/
 ├── install_debian.sh     ← Debian/Ubuntu/Devuan（apt）
 ├── install_redhat.sh     ← RHEL/CentOS/Alma/Rocky（dnf）
 ├── install_sway.sh       ← Sway 桌面（跨平台，独立运行）
+├── install_xfce.sh      ← XFCE + xrdp 远程桌面（无头服务器，独立运行）
 ├── bashrc.sh             ← Bash 配置（Linux 注入 ~/.bashrc）
 ├── zshrc.sh              ← Zsh 配置（macOS 注入 ~/.zshrc）
 ├── aliases.sh             ← 别名集（配合 shell rc）
-└── sway/                 ← Sway 配置文件（含 swaylock 锁屏主题）
+├── sway/                 ← Sway 配置文件（含 swaylock 锁屏主题）
+└── xfce/                 ← XFCE 配置文件（.xsession / fcitx5 自启）
 ```
 
 子脚本可独立运行，安装指定平台的工具：
@@ -70,6 +72,10 @@ source configs/install_debian.sh && install_packages
 # Sway 桌面（跨平台）
 sudo bash configs/install_sway.sh
 sudo bash configs/install_sway.sh --minimal   # 仅核心组件
+
+# XFCE + xrdp 远程桌面（无头服务器）
+sudo bash configs/install_xfce.sh             # 含 xrdp
+sudo bash configs/install_xfce.sh --no-xrdp   # 仅 XFCE（本地有显示器）
 ```
 
 ## 安装内容
@@ -79,6 +85,7 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **基础工具** | Debian / RHEL | tmux、neovim、fzf、bat、ripgrep、git、openssh-server、btop、tealdeer、glow、gitu、gonzo 等 |
 | **macOS 工具** | macOS | 同上 via Homebrew |
 | **Sway 桌面** | Linux | sway、waybar、wofi、mako、kitty、Thunar、PipeWire 等 |
+| **XFCE 远程桌面** | Linux | xfce4、xrdp、dbus-x11；无头服务器 RDP 远程访问，详见 [XFCE.md](XFCE.md) |
 | **开发运行时** | 全平台 | Node.js 22.x（NodeSource）、Rust、uv、Go |
 | **AI 工具** | 全平台 | opencode（AI 编程）、oh-my-pi（via bun） |
 | **日志分析** | 全平台 | gonzo（Go TUI 日志分析工具） |
@@ -100,6 +107,7 @@ sudo bash configs/install_sway.sh --minimal   # 仅核心组件
 | **herdr** | 终端复用器（tmux 替代），`Ctrl+B` 前缀，支持 AI agent 管理、会话持久化、远程连接 |
 | **gonzo** | 日志分析 TUI，支持实时流、K8s 集成、AI 分析、OTLP 协议 |
 | **Sway** | 平铺窗口管理器（Linux），Waybar + Wofi + Mako 主题化，swaylock 锁屏 + swayidle 自动息屏，截图快捷键 |
+| **XFCE** | xrdp 远程桌面会话（`~/.xsession` / `~/.xsessionrc` / fcitx5 自启），默认终端 kitty，详见 [XFCE.md](XFCE.md) |
 
 ## 主题配色
 

@@ -1,0 +1,18 @@
+# ==============================================================================
+# X 会话环境变量（xrdp / X11 场景）
+# 由 easyMyspace install_xfce.sh 部署到 ~/.xsessionrc
+# /etc/X11/Xsession.d/40x11-common_xsessionrc 会在会话启动前 source 本文件
+# ==============================================================================
+
+# 强制 X11 后端，清除可能残留的 Wayland 环境变量（如 start-sway 遗留）
+unset GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER CLUTTER_BACKEND
+export GDK_BACKEND=x11
+export QT_QPA_PLATFORM=xcb
+
+# 输入法（fcitx5）
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+export SDL_IM_MODULE=fcitx
+# kitty 在 X11 下用 GLFW 后端，只认 IBus 协议，需通过 IBus 兼容层与 fcitx5 通信
+export GLFW_IM_MODULE=ibus
