@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""sync-omp-providers — 从 opencode 配置同步 provider 到 oh-my-pi
+"""sync-omp-providers — 从 opencode 配置同步 provider 到 oh-my-pi 和 jcode
 
 功能:
   1. 读取 ~/.config/opencode/opencode.json 中的 provider 列表
   2. 生成 ~/.omp/agent/models.yml（包含完整的 API Key）
-注意: 会覆盖 omp 现有 provider 配置，如需保留请手动合并
+  3. 更新 ~/.jcode/config.toml 中的 provider 配置（保留其他设置）
+注意: 会覆盖 omp/jcode 现有 provider 配置，如需保留请手动合并
 """
 import json
 import os
@@ -16,6 +17,7 @@ from pathlib import Path
 
 OPENCODE_CONFIG = Path.home() / ".config" / "opencode" / "opencode.json"
 OMP_CONFIG = Path.home() / ".omp" / "agent" / "models.yml"
+JCODE_CONFIG = Path.home() / ".jcode" / "config.toml"
 
 CYAN = "\033[0;36m"
 GREEN = "\033[0;32m"
@@ -120,6 +122,112 @@ def generate_yaml(data: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def toml_value(value: str) -> str:
+    """TOML 字符串值：始终加双引号并转义"""
+    if not value:
+        return '""'
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def is_provider_header(line: str) -> bool:
+    """判断一行是否为 jcode provider 节标题"""
+    s = line.strip()
+    if s == "[providers]":
+        return False
+    return (s.startswith("[providers.") and s.endswith("]")) or (
+        s.startswith("[[providers.") and s.endswith("]]")
+    )
+
+
+def build_jcode_providers_toml(data: dict) -> str:
+    """生成 jcode provider TOML 条目"""
+    lines: list[str] = []
+    provider_keys = sorted(data.get("provider", {}).keys())
+
+    for provider_id in provider_keys:
+        prov = data["provider"][provider_id]
+        options = prov.get("options", {})
+        base_url = options.get("baseURL", "")
+        api_key = options.get("apiKey", "")
+        models = prov.get("models", {})
+        model_ids = sorted(models.keys())
+        if not model_ids:
+            continue
+        default_model = model_ids[0]
+
+        lines.append(f"[providers.{provider_id}]")
+        lines.append('type = "openai-compatible"')
+        lines.append(f"base_url = {toml_value(base_url)}")
+        lines.append(f"api_key = {toml_value(api_key)}")
+        lines.append(f"default_model = {toml_value(default_model)}")
+        lines.append("requires_api_key = true")
+        lines.append("")
+
+        for mid in model_ids:
+            lines.append(f"[[providers.{provider_id}.models]]")
+            lines.append(f"id = {toml_value(mid)}")
+            lines.append("")
+
+    return "\n".join(lines)
+
+
+def strip_jcode_providers(content: str) -> str:
+    """移除 jcode config 中现有的 provider 定义节"""
+    lines = content.split("\n")
+    result: list[str] = []
+    skip = False
+
+    for line in lines:
+        stripped = line.strip()
+        if is_provider_header(stripped):
+            skip = True
+            continue
+        if skip and stripped.startswith("[") and stripped.endswith("]"):
+            skip = False
+            if is_provider_header(stripped):
+                skip = True
+                continue
+        if not skip:
+            result.append(line)
+
+    return "\n".join(result)
+
+
+def sync_jcode(data: dict):
+    """同步 provider 到 jcode config.toml"""
+    info("Syncing providers to jcode config…")
+
+    if JCODE_CONFIG.exists():
+        ts = datetime.now().strftime("%Y%m%d%H%M%S")
+        bak = JCODE_CONFIG.with_suffix(f".toml.bak.{ts}")
+        shutil.copy2(str(JCODE_CONFIG), str(bak))
+        info(f"Backed up existing jcode config → {bak}")
+        existing = JCODE_CONFIG.read_text(encoding="utf-8")
+        base = strip_jcode_providers(existing)
+    else:
+        base = ""
+
+    providers_toml = build_jcode_providers_toml(data)
+    if not providers_toml.strip():
+        info("No providers to sync for jcode")
+        return
+
+    if base.strip():
+        base = base.rstrip("\n") + "\n\n"
+    merged = base + providers_toml + "\n"
+
+    # Clean up trailing blank lines
+    while "\n\n\n" in merged:
+        merged = merged.replace("\n\n\n", "\n\n")
+
+    JCODE_CONFIG.parent.mkdir(parents=True, exist_ok=True)
+    JCODE_CONFIG.write_text(merged, encoding="utf-8")
+
+    total_providers = len(data.get("provider", {}))
+    ok(f"Synced {total_providers} providers from opencode → jcode")
+
+
 def main():
     if not OPENCODE_CONFIG.exists():
         error(f"opencode config not found at {OPENCODE_CONFIG}")
@@ -157,6 +265,10 @@ def main():
     info("API keys are synced from opencode config")
     info("Test with: omp --list-models")
     print()
+
+    sync_jcode(data)
+    print()
+    info("Test jcode with: jcode --help")
 
 
 if __name__ == "__main__":
