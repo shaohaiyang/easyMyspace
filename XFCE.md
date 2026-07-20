@@ -129,7 +129,7 @@ pkill -u "$USER" -f "sway|swaybg|swaybar"
 
 **典型症状**：重启或重连后无法切换出中文输入法，之前配置过的 fcitx5 似乎"还原"了。
 
-**根因**：fcitx5 进程未随会话启动 + 输入法环境变量未持久化。注意 fcitx5 自身的输入法列表（拼音/五笔等）保存在 `~/.config/fcitx5/profile/defaultprofile`，通常不会丢；丢的是「让程序知道用 fcitx」的环境变量和「让 fcitx5 跑起来」的自启条目。
+**根因**：fcitx5 进程未随会话启动 + 输入法环境变量未持久化。fcitx5 自身的输入法列表（拼音/五笔等）保存在普通文件 `~/.config/fcitx5/profile`（注意：是文件，不是目录；若被错误地建为 `profile/` 目录，fcitx5 无法读写，重启后输入法列表会丢失）；本节场景里通常丢的不是它，而是「让程序知道用 fcitx」的环境变量和「让 fcitx5 跑起来」的自启条目。
 
 **诊断**：
 ```bash
@@ -148,7 +148,7 @@ ls ~/.config/autostart/fcitx5.desktop 2>/dev/null || echo "缺失！"
 im-config -m 2>/dev/null
 
 # 5. 输入法列表是否还在（确认 profile 没丢，丢的是上面的环境/自启）
-cat ~/.config/fcitx5/profile/defaultprofile 2>/dev/null
+cat ~/.config/fcitx5/profile 2>/dev/null
 ```
 
 **修复**：最省事的方式是重跑安装脚本（幂等，会自动备份旧文件）：

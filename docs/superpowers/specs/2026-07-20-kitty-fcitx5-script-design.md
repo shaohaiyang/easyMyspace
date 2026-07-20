@@ -25,7 +25,7 @@ kitty 在 X11 下用 GLFW 作为输入后端，GLFW 只认 IBus 协议，因此 
 ### Out of scope
 - 不修改 `setup.sh` / `install_xfce.sh`（纯独立运行）
 - 不动 `kitty.conf`（`setup.sh` 已部署）
-- 不动 fcitx5 profile / defaultprofile（`install_sway.sh` 已管）
+- 不动 fcitx5 profile（`install_sway.sh` 已管）
 - 不管 Wayland/Sway（Wayland 下 kitty 走 text-input 协议，无需 `GLFW_IM_MODULE`；`.xsessionrc` 是 X11 专属）
 - 不装 xrdp / XFCE（`install_xfce.sh` 的职责）
 

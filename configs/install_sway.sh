@@ -370,7 +370,6 @@ declare -A CONFIG_MAP=(
   ["wofi/style.css"]="$REAL_HOME/.config/wofi/style.css"
   ["mako/config"]="$REAL_HOME/.config/mako/config"
   ["fcitx5/config"]="$REAL_HOME/.config/fcitx5/config"
-  ["fcitx5/profile/defaultprofile"]="$REAL_HOME/.config/fcitx5/profile/defaultprofile"
 )
 
 for src_rel in "${!CONFIG_MAP[@]}"; do
@@ -387,6 +386,28 @@ for src_rel in "${!CONFIG_MAP[@]}"; do
   fi
   ok "已部署: $src_rel → $dst"
 done
+
+# fcitx5 profile 必须是普通文件 ~/.config/fcitx5/profile（不是目录）。
+# 旧版脚本误把 profile 当作目录部署成 profile/defaultprofile，导致 fcitx5 无法读写
+# 输入法列表、重启后配置丢失。这里单独处理：自愈旧的错误目录、且不覆盖已有 profile。
+FCITX5_PROFILE_SRC="$CONFIG_SRC/fcitx5/profile"
+FCITX5_PROFILE_DST="$REAL_HOME/.config/fcitx5/profile"
+if [ ! -f "$FCITX5_PROFILE_SRC" ]; then
+  warn "fcitx5 profile 种子文件不存在: $FCITX5_PROFILE_SRC"
+elif [ -d "$FCITX5_PROFILE_DST" ]; then
+  mv "$FCITX5_PROFILE_DST" "${FCITX5_PROFILE_DST}.dir.bak.$(date +%s)"
+  cp "$FCITX5_PROFILE_SRC" "$FCITX5_PROFILE_DST"
+  [ "$EUID" -eq 0 ] && [ -n "${SUDO_USER:-}" ] && chown "$REAL_USER:" "$FCITX5_PROFILE_DST"
+  warn "检测到 $FCITX5_PROFILE_DST 是目录（旧脚本 bug），已备份并修正为文件"
+  ok "已部署 fcitx5 profile 种子: $FCITX5_PROFILE_DST"
+elif [ -e "$FCITX5_PROFILE_DST" ]; then
+  ok "fcitx5 profile 已存在，保留用户配置（不覆盖）: $FCITX5_PROFILE_DST"
+else
+  mkdir -p "$(dirname "$FCITX5_PROFILE_DST")"
+  cp "$FCITX5_PROFILE_SRC" "$FCITX5_PROFILE_DST"
+  [ "$EUID" -eq 0 ] && [ -n "${SUDO_USER:-}" ] && chown "$REAL_USER:" "$FCITX5_PROFILE_DST"
+  ok "已部署 fcitx5 profile 种子: $FCITX5_PROFILE_DST"
+fi
 
 # start-sway 添加执行权限
 if [ -f "/usr/local/bin/start-sway" ]; then
