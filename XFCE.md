@@ -125,10 +125,117 @@ pkill -u "$USER" -f "sway|swaybg|swaybar"
 ```
 然后断开 RDP 重连。
 
-### 中文输入法不工作
-- 确认 fcitx5 进程在跑：`pgrep -a fcitx5`
-- 确认环境变量已注入：`cat ~/.xsessionrc | grep IM_MODULE`
-- kitty 下需 `GLFW_IM_MODULE=ibus`（已在 `.xsessionrc` 中设置，详见 [README - Kitty 输入法配置](README.md#kitty-输入法---fcitx5-配置)）
+### 中文输入法不工作 / 重启后输入法配置丢失
+
+**典型症状**：重启或重连后无法切换出中文输入法，之前配置过的 fcitx5 似乎"还原"了。
+
+**根因**：fcitx5 进程未随会话启动 + 输入法环境变量未持久化。注意 fcitx5 自身的输入法列表（拼音/五笔等）保存在 `~/.config/fcitx5/profile/defaultprofile`，通常不会丢；丢的是「让程序知道用 fcitx」的环境变量和「让 fcitx5 跑起来」的自启条目。
+
+**诊断**：
+```bash
+# 1. fcitx5 是否在运行（最常见失败点：根本没启动）
+pgrep -a fcitx5
+
+# 2. 环境变量是否持久化（Debian X 会话会 source ~/.xsessionrc）
+grep IM_MODULE ~/.xsessionrc 2>/dev/null
+# 或查看当前会话实际值
+echo "GTK=$GTK_IM_MODULE QT=$QT_IM_MODULE XMOD=$XMODIFIERS"
+
+# 3. 自启条目是否存在
+ls ~/.config/autostart/fcitx5.desktop 2>/dev/null || echo "缺失！"
+
+# 4. im-config 是否指向 fcitx5
+im-config -m 2>/dev/null
+
+# 5. 输入法列表是否还在（确认 profile 没丢，丢的是上面的环境/自启）
+cat ~/.config/fcitx5/profile/defaultprofile 2>/dev/null
+```
+
+**修复**：最省事的方式是重跑安装脚本（幂等，会自动备份旧文件）：
+```bash
+sudo bash configs/install_xfce.sh
+```
+
+或手动补齐两块缺失项：
+```bash
+# 1. 环境变量 -> ~/.xsessionrc
+#    Debian 的 /etc/X11/Xsession.d/40x11-common_xsessionrc 会在会话启动前 source 它
+#    （若用 GDM/LightDM 直接登录而非 xrdp，也可改用 ~/.xprofile，二者等价）
+cat > ~/.xsessionrc << 'EOF'
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+export SDL_IM_MODULE=fcitx
+export GLFW_IM_MODULE=ibus
+EOF
+
+# 2. 自启条目（fcitx5 默认未注册到 /etc/xdg/autostart）
+mkdir -p ~/.config/autostart
+cp /usr/share/applications/org.fcitx.Fcitx5.desktop ~/.config/autostart/
+
+# 3. 声明系统输入法框架为 fcitx5
+im-config -n fcitx5
+```
+
+改完**注销重登**即可生效（无需重启系统）。重登后验证：
+```bash
+echo $GTK_IM_MODULE     # 应输出 fcitx
+pgrep -a fcitx5         # 应看到 fcitx5 进程
+```
+然后用 `Ctrl+Space` 切换输入法。
+
+> kitty 下需 `GLFW_IM_MODULE=ibus`（已在 `.xsessionrc` 中设置，详见 [README - Kitty 输入法配置](README.md#kitty-输入法---fcitx5-配置)）
+
+### kitty 进程没有 GLFW_IM_MODULE（验证命令返回空）
+
+**典型症状**：`cat /proc/$(pidof kitty)/environ | tr '\0' '\n' | grep GLFW_IM_MODULE` 输出为空；kitty 里 Shift 切不出中文，但浏览器、VSCode 等其它应用切换正常。
+
+**根因**：kitty 从 xfce4-panel 启动时继承的是 XFCE 会话环境，而该环境里没有 `GLFW_IM_MODULE`。最常见于**只跑了 `setup.sh`、没跑 `install_xfce.sh`**——`setup.sh` 装了 kitty 并部署 `kitty.conf`，但不会部署 `~/.xsessionrc`。结合 [README - Kitty 输入法配置](README.md#kitty-输入法---fcitx5-配置) 的三方式，关键认知：
+
+- 方式三（`kitty.conf` 里 `env GLFW_IM_MODULE=ibus`）**只对 kitty 的子进程生效**，kitty 自身进程读不到——这是最常踩的坑。
+- kitty 自身要拿到该变量，必须在**启动前**由方式一（`.desktop` 的 `Exec=env ...`）或方式二（`.xsessionrc` 的 `export`）注入。
+
+**诊断**：
+```bash
+# 1. 当前会话类型（确认是 XFCE/x11，而非 Sway）
+echo "$XDG_CURRENT_DESKTOP $XDG_SESSION_TYPE"
+
+# 2. kitty 是怎么启动的——父进程链是否经过 xfce4-panel
+pid=$(pidof kitty | awk '{print $1}')
+ps -o pid,ppid,cmd -p "$pid"
+ppid=$(awk '/^PPid:/{print $2}' /proc/$pid/status)
+ps -o pid,cmd -p "$ppid"
+
+# 3. 三种方式各部署了没
+ls ~/.local/share/applications/kitty.desktop 2>/dev/null   # 方式一
+grep GLFW_IM_MODULE ~/.xsessionrc 2>/dev/null              # 方式二
+grep GLFW_IM_MODULE ~/.config/kitty/kitty.conf 2>/dev/null # 方式三（仅子进程）
+
+# 4. 直接看 kitty 进程环境里有没有
+cat /proc/$(pidof kitty)/environ 2>/dev/null | tr '\0' '\n' | grep GLFW_IM_MODULE
+```
+
+若 1 显示 XFCE、2 显示 kitty 由 xfce4-panel 启动、3 中方式一/二都缺失、4 为空——即本故障。
+
+**修复**（A 即时 + B 彻底，建议都做）：
+
+A. **即时**（README 推荐方式一）——部署用户级 `.desktop` 覆盖，让面板启动的 kitty 自带变量，**无需重登**：
+```bash
+mkdir -p ~/.local/share/applications
+cp /usr/share/applications/kitty.desktop ~/.local/share/applications/
+sed -i 's|^Exec=kitty$|Exec=env GLFW_IM_MODULE=ibus kitty|' ~/.local/share/applications/kitty.desktop
+```
+关掉所有旧 kitty 窗口，从面板重开即生效。
+
+B. **彻底**——跑安装脚本部署 `.xsessionrc` + `.xsession` + fcitx5 自启：
+```bash
+sudo bash configs/install_xfce.sh
+```
+重连 xrdp 会话后，所有 X11 应用都拿到 `*_IM_MODULE` 变量 + fcitx5 开机自启。
+
+**验证**：重开 kitty 后再跑一次诊断第 4 步，应输出 `GLFW_IM_MODULE=ibus`。
+
+> 注：`install_xfce.sh` 部署的 `.xsessionrc`（方式二）在**重登后**已能让 kitty 拿到 `GLFW_IM_MODULE`，方式一（`.desktop`）只是免重登的即时补救。脚本目前未自动化方式一，需要即时生效时按上面 A 手动建一次即可。
 
 ### 终端不是 kitty
 ```bash
