@@ -15,6 +15,12 @@ REPO_BRANCH="main"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$SCRIPT_DIR/configs"
 
+# 关闭 git 的 TLS 证书校验，避免部分网络环境下 clone 报错：
+#   fatal: unable to access 'https://github.com/...': GnuTLS recv error (-110)
+if command -v git &>/dev/null; then
+  git config --global http.sslVerify false
+fi
+
 # 如果 configs/ 不存在（pipe 模式），自动 clone 到临时目录
 if [ ! -d "$CONFIG_DIR" ]; then
   TMP_DIR="/tmp/easyMyspace-$$"
